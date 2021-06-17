@@ -1,4 +1,2 @@
-config/site.php
-files/cache/*
-files/tmp/*
-.htaccess
+/build
+game_ideas.txt
