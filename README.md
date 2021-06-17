@@ -1,6 +1,6 @@
-## GameWithNoName
+# GameWithNoName
 
-# ideas
+## Ideas
 
 - flat world
 - placeable buildings & assets
