@@ -2,9 +2,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-void framebuffer_resize_callback(GLFWwindow* window, int width, int height);
+#include "render_engine/render_window.h"
 
-int main(int argc, char** argv) {
+
+int main() {
 	float vertices[] = {
 		-0.5f, -0.5f, 0.0f,
 		-0.5f, 0.5f, 0.0f,
@@ -15,23 +16,8 @@ int main(int argc, char** argv) {
 	};
 
 	// init window & attributes
-	glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "GameWithNoName", NULL, NULL);
-	if (window == NULL) {
-		std::cerr << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return -1;
-	}
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_resize_callback);
-
-	// load glad
-	gladLoadGL();
+	rendering::render_window window{"Game", 800, 600, false};
 
 	// create a vertex shader
 	const char *vertexShaderSource = "#version 330 core\n"
@@ -108,27 +94,16 @@ int main(int argc, char** argv) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
 	glUseProgram(shaderProgram);
 	glBindVertexArray(vao);
 
-	// main loop
-	while(!glfwWindowShouldClose(window)) {
-		// process key events
-		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-			glfwSetWindowShouldClose(window, GL_TRUE);
-		}
-
-		// clear window
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// render
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		// update
-    	glfwSwapBuffers(window);
-    	glfwPollEvents();
+    	window.update();
 	}
 
 	glDeleteVertexArrays(1, &vao);
@@ -140,6 +115,3 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-void framebuffer_resize_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-}

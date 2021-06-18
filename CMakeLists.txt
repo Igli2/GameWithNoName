@@ -12,6 +12,12 @@ set(GLFW_INSTALL OFF CACHE BOOL "GLFW lib only")
 add_subdirectory(glad)
 add_subdirectory(glfw)
 
-add_executable(game src/game.cpp)
+set(SOURCE_FILES
+    src/render_engine/render_window.cpp
+
+    src/render_engine/render_window.h
+)
+
+add_executable(game src/game.cpp ${SOURCE_FILES})
 
 target_link_libraries(game glad ${OPENGL_LIBRARIES} glfw)
