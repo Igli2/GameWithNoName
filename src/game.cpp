@@ -1,5 +1,8 @@
-#include "main.hpp"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <iostream>
 
+void framebuffer_resize_callback(GLFWwindow* window, int width, int height);
 
 int main(int argc, char** argv) {
 	float vertices[] = {
@@ -20,7 +23,7 @@ int main(int argc, char** argv) {
 
 	GLFWwindow* window = glfwCreateWindow(800, 600, "GameWithNoName", NULL, NULL);
 	if (window == NULL) {
-		std::cout << "Failed to create GLFW window" << std::endl;
+		std::cerr << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
@@ -50,7 +53,7 @@ int main(int argc, char** argv) {
 
 	if(!success) {
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "**VERTEX SHADER ERROR**\n" << infoLog << std::endl;
+		std::cerr << "**VERTEX SHADER ERROR**\n" << infoLog << std::endl;
 	}
 
 	// create fragment shader
@@ -70,7 +73,7 @@ int main(int argc, char** argv) {
 
 	if(!success) {
 		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "**FRAGMENT SHADER ERROR**\n" << infoLog << std::endl;
+		std::cerr << "**FRAGMENT SHADER ERROR**\n" << infoLog << std::endl;
 	}
 
 	// shader program
@@ -85,7 +88,7 @@ int main(int argc, char** argv) {
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
 	if(!success) {
 		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "**SHADER PROGRAM LINK ERROR**\n" << infoLog << std::endl;
+		std::cerr << "**SHADER PROGRAM LINK ERROR**\n" << infoLog << std::endl;
 	}
 
 	glDeleteShader(vertexShader);
@@ -105,22 +108,23 @@ int main(int argc, char** argv) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+	glUseProgram(shaderProgram);
+	glBindVertexArray(vao);
+
 	// main loop
 	while(!glfwWindowShouldClose(window)) {
 		// process key events
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-			std::cout << "SECRET ESCAPE" << std::endl;
+			glfwSetWindowShouldClose(window, GL_TRUE);
 		}
 
 		// clear window
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// render
-		glUseProgram(shaderProgram);
-		glBindVertexArray(vao);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		glDrawArrays(GL_TRIANGLES, 3, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		// update
     	glfwSwapBuffers(window);

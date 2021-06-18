@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20.3)
-set (CMAKE_CXX_STANDARD 20)
+set (CMAKE_CXX_STANDARD 11)
 
 project(GameWithNoName)
 
@@ -12,6 +12,6 @@ set(GLFW_INSTALL OFF CACHE BOOL "GLFW lib only")
 add_subdirectory(glad)
 add_subdirectory(glfw)
 
-add_executable(game src/main.cpp)
+add_executable(game src/game.cpp)
 
 target_link_libraries(game glad ${OPENGL_LIBRARIES} glfw)
