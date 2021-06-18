@@ -9,8 +9,9 @@ include_directories( ${OPENGL_INCLUDE_DIRS} )
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "GLFW lib only")
 set(GLFW_INSTALL OFF CACHE BOOL "GLFW lib only")
 
+add_subdirectory(glad)
 add_subdirectory(glfw)
 
 add_executable(main src/main.cpp)
 
-target_link_libraries(main ${OPENGL_LIBRARIES} glfw)
+target_link_libraries(main glad ${OPENGL_LIBRARIES} glfw)
