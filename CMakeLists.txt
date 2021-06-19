@@ -15,10 +15,12 @@ add_subdirectory(glfw)
 set(SOURCE_FILES
     src/rendering/render_window.cpp
     src/events/event_handler.cpp
+    src/menu/menu.cpp
 
     src/rendering/render_window.h
     src/events/event_handler.h
     src/events/events.h
+    src/menu/menu.h
 )
 
 add_executable(game src/game.cpp ${SOURCE_FILES})

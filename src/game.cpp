@@ -4,10 +4,17 @@
 
 #include "rendering/render_window.h"
 #include "events/event_handler.h"
+#include "menu/menu.h"
 
 void on_esc_press(rendering::render_window* window, int key, int scancode, int action, int mods);
 
 int main() {
+	//menu test
+	Menu menu;
+	menu.addResources(Resource::BEECH_LOG, 10);
+	menu.removeResources(Resource::BEECH_LOG, 8);
+	menu.removeResources(Resource::BEECH_LOG, 8);
+	
 	float vertices[] = {
 		-0.5f, -0.5f, 0.0f,
 		-0.5f, 0.5f, 0.0f,
