@@ -14,9 +14,11 @@ add_subdirectory(glfw)
 
 set(SOURCE_FILES
     src/rendering/render_window.cpp
+    src/rendering/shader.cpp
     src/events/event_handler.cpp
 
     src/rendering/render_window.h
+    src/rendering/shader.h
     src/events/event_handler.h
     src/events/events.h
 )
