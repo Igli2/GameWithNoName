@@ -13,9 +13,12 @@ add_subdirectory(glad)
 add_subdirectory(glfw)
 
 set(SOURCE_FILES
-    src/render_engine/render_window.cpp
+    src/rendering/render_window.cpp
+    src/events/event_handler.cpp
 
-    src/render_engine/render_window.h
+    src/rendering/render_window.h
+    src/events/event_handler.h
+    src/events/events.h
 )
 
 add_executable(game src/game.cpp ${SOURCE_FILES})

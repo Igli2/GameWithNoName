@@ -2,8 +2,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-#include "render_engine/render_window.h"
+#include "rendering/render_window.h"
+#include "events/event_handler.h"
 
+void on_esc_press(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 int main() {
 	float vertices[] = {
@@ -16,8 +18,10 @@ int main() {
 	};
 
 	// init window & attributes
+	event::event_handler ev_handler{};
+	rendering::render_window window{"Game", 800, 600, false, ev_handler};
 
-	rendering::render_window window{"Game", 800, 600, false};
+	ev_handler.add_key_event(on_esc_press);
 
 	// create a vertex shader
 	const char *vertexShaderSource = "#version 330 core\n"
@@ -115,3 +119,8 @@ int main() {
 	return 0;
 }
 
+void on_esc_press(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	}
+}
