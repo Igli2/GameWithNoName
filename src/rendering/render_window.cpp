@@ -7,6 +7,8 @@ using namespace rendering;
 //helper_functions
 void framebuffer_resize_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void mouse_move_callback(GLFWwindow* window, double xpos, double ypos);
+
 
 void framebuffer_resize_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -14,6 +16,10 @@ void framebuffer_resize_callback(GLFWwindow* window, int width, int height) {
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     ((render_window*)glfwGetWindowUserPointer(window))->key_press_callback(key, scancode, action, mods);
+}
+
+void mouse_move_callback(GLFWwindow* window, double xpos, double ypos) {
+    ((render_window*)glfwGetWindowUserPointer(window))->mouse_move_callback(xpos, ypos);
 }
 
 
@@ -61,6 +67,10 @@ void render_window::update() {
 
 void render_window::key_press_callback(int key, int scancode, int action, int mods) {
     this->ev_handler.key_press_callback(this, key, scancode, action, mods);
+}
+
+void render_window::mouse_move_callback(double xpos, double ypos) {
+    this->ev_handler.mouse_move_callback(this, xpos, ypos);
 }
 
 void render_window::close() {
