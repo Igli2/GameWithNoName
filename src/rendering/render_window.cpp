@@ -60,7 +60,11 @@ void render_window::update() {
 }
 
 void render_window::key_press_callback(int key, int scancode, int action, int mods) {
-    this->ev_handler.key_press_callback(this->window, key, scancode, action, mods);
+    this->ev_handler.key_press_callback(this, key, scancode, action, mods);
+}
+
+void render_window::close() {
+    glfwSetWindowShouldClose(this->window, GL_TRUE);
 }
 
 render_window::~render_window() {

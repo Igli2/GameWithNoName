@@ -5,7 +5,7 @@
 #include "rendering/render_window.h"
 #include "events/event_handler.h"
 
-void on_esc_press(GLFWwindow* window, int key, int scancode, int action, int mods);
+void on_esc_press(rendering::render_window* window, int key, int scancode, int action, int mods);
 
 int main() {
 	float vertices[] = {
@@ -119,8 +119,8 @@ int main() {
 	return 0;
 }
 
-void on_esc_press(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void on_esc_press(rendering::render_window* window, int key, int scancode, int action, int mods) {
 	if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, GL_TRUE);
+		window->close();
 	}
 }

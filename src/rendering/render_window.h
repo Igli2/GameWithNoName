@@ -20,6 +20,7 @@ namespace rendering {
             bool is_open();
             void update();
             void key_press_callback(int key, int scancode, int action, int mods);
+            void close();
             virtual ~render_window();
     };    
 }

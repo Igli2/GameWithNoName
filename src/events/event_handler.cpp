@@ -21,7 +21,7 @@ bool event_handler::remove_key_event(const key_event event) {
     return true;
 }
 
-void event_handler::key_press_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void event_handler::key_press_callback(rendering::render_window* window, int key, int scancode, int action, int mods) {
     for(const key_event& event : this->key_events) {
         event(window, key, scancode, action, mods);
     }
