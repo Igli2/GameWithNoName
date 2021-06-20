@@ -2,10 +2,12 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 #include "rendering/render_window.h"
 #include "events/event_handler.h"
 #include "rendering/shader.h"
+#include "rendering/mesh.h"
 #include "menu/menu.h"
 
 void on_esc_press(rendering::render_window* window, int key, int scancode, int action, int mods);
@@ -17,14 +19,17 @@ int main() {
 	menu.removeResources(Resource::BEECH_LOG, 8);
 	menu.removeResources(Resource::BEECH_LOG, 8);
 	
-	float vertices[] = {
+	std::vector<float> vertices{{
+		0.5f, 0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f,
 		-0.5f, -0.5f, 0.0f,
-		-0.5f, 0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		-0.5f, 0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.5f, 0.5f, 0.0f
-	};
+		-0.5f, 0.5f, 0.0f
+	}};
+
+	std::vector<unsigned int> indices{{
+		0, 1, 3,
+		1, 2, 3
+	}};
 
 	// init window & attributes
 	event::event_handler ev_handler{};
@@ -49,36 +54,18 @@ int main() {
 
 	rendering::shader_program test_shader{shaders};
 
-
-	uint vao;
-	uint vbo;
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	glBindVertexArray(vao);
-
+	rendering::mesh rect = std::move(rendering::mesh::create(vertices, indices, GL_STATIC_DRAW));
+	
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	test_shader.use();
 	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		rect.draw();
 
     	window.update();
 	}
-
-	glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vbo);
 
 	glfwTerminate();
 
