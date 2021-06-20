@@ -16,6 +16,10 @@ mesh::mesh(mesh&& other) {
     this->indices_count = other.indices_count;
 }
 
+unsigned int mesh::get_vao() {
+    return this->vao;
+}
+
 void mesh::draw() {
     glBindVertexArray(this->vao);
 

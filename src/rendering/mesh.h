@@ -18,6 +18,7 @@ namespace rendering {
             mesh();
             mesh(mesh&& other);
             mesh(const mesh& other) = delete;
+            unsigned int get_vao();
             void draw();
             ~mesh();
 
