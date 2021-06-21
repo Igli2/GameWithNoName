@@ -12,6 +12,8 @@
 
 void on_esc_press(rendering::render_window* window, int key, int scancode, int action, int mods);
 
+float off_x = 0; //temporary, testing-purposes only
+
 int main() {
 	//menu test
 	Menu menu;
@@ -53,6 +55,7 @@ int main() {
 	vert_shader.close();
 
 	rendering::shader_program test_shader{shaders};
+	int off_x_pos = test_shader.get_uniform_location("off_x");
 
 	rendering::mesh rect = std::move(rendering::mesh::create(vertices, indices, GL_STATIC_DRAW));
 	
@@ -61,6 +64,8 @@ int main() {
 	test_shader.use();
 	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		glUniform1f(off_x_pos, off_x);
 
 		rect.draw();
 
@@ -73,7 +78,17 @@ int main() {
 }
 
 void on_esc_press(rendering::render_window* window, int key, int scancode, int action, int mods) {
-	if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-		window->close();
+	if(action == GLFW_PRESS) {
+		switch(key) {
+			case GLFW_KEY_ESCAPE:
+				window->close();
+				break;
+			case GLFW_KEY_A:
+				off_x -= 0.1;
+				break;
+			case GLFW_KEY_D:
+				off_x += 0.1;
+				break;
+		}
 	}
 }

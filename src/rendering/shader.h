@@ -36,6 +36,7 @@ namespace rendering {
             shader_program(const std::vector<shader>& shaders);
             shader_program(shader_program&& other);
             shader_program(const shader_program& other) = delete;
+            int get_uniform_location(const std::string& name);
             void use() const;
             ~shader_program();
 
