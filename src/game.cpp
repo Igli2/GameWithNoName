@@ -12,7 +12,23 @@
 
 void on_esc_press(rendering::render_window* window, int key, int scancode, int action, int mods);
 
-float off_x = 0; //temporary, testing-purposes only
+class game_window : public rendering::render_window {
+	private:
+		float off_x;
+	public:
+		game_window(const std::string& title, const size_t width, const size_t height, const bool resizable, event::event_handler& ev_handler)
+		 : render_window{title, width, height, resizable, ev_handler}, off_x{0} {
+			
+		}
+
+		float get_off_x() const {
+			return this->off_x;
+		}
+
+		void set_off_x(const float value) {
+			this->off_x = value;
+		}
+};
 
 int main() {
 	//menu test
@@ -35,7 +51,7 @@ int main() {
 
 	// init window & attributes
 	event::event_handler ev_handler{};
-	rendering::render_window window{"Game", 800, 600, false, ev_handler};
+	game_window window{"Game", 800, 600, false, ev_handler};
 
 	ev_handler.add_key_event(on_esc_press);
 
@@ -65,7 +81,7 @@ int main() {
 	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glUniform1f(off_x_pos, off_x);
+		glUniform1f(off_x_pos, window.get_off_x());
 
 		rect.draw();
 
@@ -78,16 +94,17 @@ int main() {
 }
 
 void on_esc_press(rendering::render_window* window, int key, int scancode, int action, int mods) {
+	game_window* w = (game_window*) window;
 	if(action == GLFW_PRESS) {
 		switch(key) {
 			case GLFW_KEY_ESCAPE:
 				window->close();
 				break;
 			case GLFW_KEY_A:
-				off_x -= 0.1;
+				w->set_off_x(w->get_off_x() - 0.1f);
 				break;
 			case GLFW_KEY_D:
-				off_x += 0.1;
+				w->set_off_x(w->get_off_x() + 0.1f);
 				break;
 		}
 	}
