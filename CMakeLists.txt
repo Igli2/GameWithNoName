@@ -17,14 +17,14 @@ set(SOURCE_FILES
     src/rendering/shader.cpp
     src/rendering/mesh.cpp
     src/events/event_handler.cpp
-    src/menu/menu.cpp
+    src/menu/resource_menu.cpp
 
     src/rendering/render_window.h
     src/rendering/shader.h
     src/rendering/mesh.h
     src/events/event_handler.h
     src/events/events.h
-    src/menu/menu.h
+    src/menu/resource_menu.h
 )
 
 add_executable(game src/game.cpp ${SOURCE_FILES})

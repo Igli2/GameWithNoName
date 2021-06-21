@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "menu.h"
+#include "resource_menu.h"
 
 Menu::Menu(): resources{} {}
 

@@ -8,7 +8,7 @@
 #include "events/event_handler.h"
 #include "rendering/shader.h"
 #include "rendering/mesh.h"
-#include "menu/menu.h"
+#include "menu/resource_menu.h"
 
 void on_esc_press(rendering::render_window* window, int key, int scancode, int action, int mods);
 
