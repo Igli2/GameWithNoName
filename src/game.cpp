@@ -126,7 +126,7 @@ int main() {
 	rendering::mesh rect = rendering::mesh::create(vertices, indices, GL_STATIC_DRAW);
 	rect.set_float_vertex_attribute(tex_coords, 1, 2, GL_STATIC_DRAW);
 
-	rendering::texture tex = rendering::texture::load_from_file("../res/textures/test.png", GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT, GL_RGB);
+	rendering::texture tex = rendering::texture::load_from_file("../res/textures/test.png", GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_REPEAT, GL_RGB);
 
 	//button test
 	Button button{10.0f, 10.0f, 100.0f, 80.0f};
