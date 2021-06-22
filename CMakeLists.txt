@@ -29,6 +29,8 @@ set(SOURCE_FILES
     src/menu/button.h
 )
 
+include_directories(includes/)
+
 add_executable(game src/game.cpp ${SOURCE_FILES})
 
 target_link_libraries(game glad ${OPENGL_LIBRARIES} glfw)
