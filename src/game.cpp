@@ -16,8 +16,9 @@
 #include "menu/resource_menu.h"
 #include "menu/button.h"
 
-void on_esc_press(rendering::render_window* window, int key, int scancode, int action, int mods);
-void on_mouse_event(rendering::render_window* window, double x, double y);
+class game_window;
+void on_key_press(rendering::render_window* window, int key, int scancode, int action, int mods);
+void on_mouse_button_press(rendering::render_window* window, int button, int action, int mods);
 
 class game_window : public rendering::render_window {
 	private:
@@ -44,6 +45,29 @@ class game_window : public rendering::render_window {
 		void render_widgets() {
 			for (Button& button : this->widgets) {
 				button.render();
+			}
+		}
+
+		// checks all button widgets if they were pressed / released
+		void on_mouse_button_press(rendering::render_window* window, int button, int action, int mods) {
+			double x, y;
+			window->get_mouse_position(&x, &y);
+
+			if (action == GLFW_PRESS) {
+				if (button == GLFW_MOUSE_BUTTON_LEFT) {
+					for (Button& b : this->widgets) {
+						if (b.collision(x, y)) {
+							b.set_pressed(true);
+							break;
+						}
+					}
+				}
+			} else {
+				if (button == GLFW_MOUSE_BUTTON_LEFT) {
+					for (Button& b : this->widgets) {
+						b.on_mouse_release();
+					}
+				}
 			}
 		}
 };
@@ -78,8 +102,8 @@ int main() {
 	event::event_handler ev_handler{};
 	game_window window{"Game", 800, 600, false, ev_handler};
 
-	ev_handler.add_key_event(on_esc_press);
-	ev_handler.add_mouse_event(on_mouse_event);
+	ev_handler.add_key_event(on_key_press);
+	ev_handler.add_mouse_button_event(on_mouse_button_press);
 
 	std::ifstream frag_shader{"../res/shaders/fragment_shaders/texture_shader.fs"};
 	std::ifstream vert_shader{"../res/shaders/vertex_shaders/texture_shader.vs"};
@@ -105,7 +129,7 @@ int main() {
 	rendering::texture tex = rendering::texture::load_from_file("../res/textures/test.png", GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT, GL_RGB);
 
 	//button test
-	Button button{-0.95, 0.85, 0.1, 0.08};
+	Button button{10.0f, 10.0f, 100.0f, 80.0f};
 	window.add_widget(std::move(button));
 	
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -128,7 +152,7 @@ int main() {
 	return 0;
 }
 
-void on_esc_press(rendering::render_window* window, int key, int scancode, int action, int mods) {
+void on_key_press(rendering::render_window* window, int key, int scancode, int action, int mods) {
 	game_window* w = (game_window*) window;
 	if(action == GLFW_PRESS) {
 		switch(key) {
@@ -145,6 +169,7 @@ void on_esc_press(rendering::render_window* window, int key, int scancode, int a
 	}
 }
 
-void on_mouse_event(rendering::render_window* window, double x, double y) {
-	std::cout << x << ", " << y << std::endl;
+void on_mouse_button_press(rendering::render_window* window, int button, int action, int mods) {
+	game_window* w = (game_window*) window;
+	w->on_mouse_button_press(w, button, action, mods);
 }
