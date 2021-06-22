@@ -94,6 +94,10 @@ void render_window::scroll_event(double xoffset, double yoffset) {
     this->ev_handler.scroll_callback(this, xoffset, yoffset);
 }
 
+void render_window::get_mouse_position(double* x, double* y) {
+    glfwGetCursorPos(this->window, x, y);
+}
+
 void render_window::close() {
     glfwSetWindowShouldClose(this->window, GL_TRUE);
 }

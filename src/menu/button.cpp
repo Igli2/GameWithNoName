@@ -4,7 +4,7 @@
 
 Button::Button(): Button{0, 0, 0, 0} {}
 
-Button::Button(float x, float y, float width, float height): x{x}, y{y}, width{width}, height{height}, visible{true} {
+Button::Button(float x, float y, float width, float height): x{x}, y{y}, width{width}, height{height}, visible{true}, pressed{false} {
     std::vector<float> vertices = this->get_vertices();
 
 	std::vector<unsigned int> indices{{
@@ -38,4 +38,32 @@ bool Button::is_visible() {
 
 void Button::set_visible(bool state) {
     this->visible = state;
+}
+
+bool Button::is_pressed() {
+    return this->pressed;
+}
+
+void Button::set_pressed(bool state) {
+    this->pressed = state;
+}
+
+bool Button::collision(const double& mouse_x, const double& mouse_y) {
+    if (this->visible) {
+        if (mouse_x >= this->x && mouse_x <= this->x + this->width) {
+            if (mouse_y >= this->y && mouse_y <= this->y + this->height) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void Button::on_mouse_release() {
+    if (this->pressed) {
+        //TODO: call callback
+        std::cout << "callback" << std::endl;
+    }
+    this->pressed = false;
 }
