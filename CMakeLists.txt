@@ -16,6 +16,7 @@ set(SOURCE_FILES
     src/rendering/render_window.cpp
     src/rendering/shader.cpp
     src/rendering/mesh.cpp
+    src/rendering/texture.cpp
     src/events/event_handler.cpp
     src/menu/resource_menu.cpp
     src/menu/button.cpp
@@ -23,6 +24,7 @@ set(SOURCE_FILES
     src/rendering/render_window.h
     src/rendering/shader.h
     src/rendering/mesh.h
+    src/rendering/texture.h
     src/events/event_handler.h
     src/events/events.h
     src/menu/resource_menu.h
