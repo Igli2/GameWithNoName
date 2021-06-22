@@ -16,8 +16,23 @@ mesh::mesh(mesh&& other) {
     this->indices_count = other.indices_count;
 }
 
-unsigned int mesh::get_vao() {
-    return this->vao;
+void mesh::set_float_vertex_attribute(const std::vector<float>& values, const GLint index, const GLint size, const GLenum draw_type) {
+    if(index <= 0 || size < 1 || size > 4) return;
+
+    unsigned int buffer;
+
+    glBindVertexArray(this->vao);
+
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, values.size() * sizeof(float), &values[0], draw_type);
+
+    glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, size * sizeof(float), nullptr);
+    glEnableVertexAttribArray(index);
+
+    glBindVertexArray(0);    
+
+    this->vertex_attributes.push_back(buffer);
 }
 
 void mesh::draw() {
@@ -32,6 +47,10 @@ mesh::~mesh() {
     if(this->ebo != 0) glDeleteBuffers(1, &this->ebo);
     if(this->vao != 0) glDeleteVertexArrays(1, &this->vao);
     if(this->vbo != 0) glDeleteBuffers(1, &this->vbo);
+
+    for(unsigned int& vertex_attrib : this->vertex_attributes) {
+        if(vertex_attrib != 0) glDeleteBuffers(1, &vertex_attrib);
+    }
 }
 
 mesh& mesh::operator=(mesh&& other) {
@@ -64,10 +83,10 @@ mesh mesh::create(const std::vector<float>& vertices, const std::vector<unsigned
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m.ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], draw_type);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
 
     glBindVertexArray(0);
     
-    return std::move(m);
+    return m;
 }

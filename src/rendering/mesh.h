@@ -14,11 +14,13 @@ namespace rendering {
             unsigned int vao;
             unsigned int vbo;
             unsigned int ebo;
+
+            std::vector<unsigned int> vertex_attributes;
         public:
             mesh();
             mesh(mesh&& other);
             mesh(const mesh& other) = delete;
-            unsigned int get_vao();
+            void set_float_vertex_attribute(const std::vector<float>& values, const GLint index, const GLint size, const GLenum draw_type);
             void draw();
             ~mesh();
 
