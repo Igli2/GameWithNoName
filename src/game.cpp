@@ -9,12 +9,15 @@
 #include "rendering/shader.h"
 #include "rendering/mesh.h"
 #include "menu/resource_menu.h"
+#include "menu/button.h"
 
 void on_esc_press(rendering::render_window* window, int key, int scancode, int action, int mods);
+void on_mouse_event(rendering::render_window* window, double x, double y);
 
 class game_window : public rendering::render_window {
 	private:
 		float off_x;
+		std::vector<Button> widgets;
 	public:
 		game_window(const std::string& title, const size_t width, const size_t height, const bool resizable, event::event_handler& ev_handler)
 		 : render_window{title, width, height, resizable, ev_handler}, off_x{0} {
@@ -27,6 +30,16 @@ class game_window : public rendering::render_window {
 
 		void set_off_x(const float value) {
 			this->off_x = value;
+		}
+
+		void add_widget(Button button) {
+			this->widgets.push_back(std::move(button));
+		}
+
+		void render_widgets() {
+			for (Button& button : this->widgets) {
+				button.render();
+			}
 		}
 };
 
@@ -54,6 +67,7 @@ int main() {
 	game_window window{"Game", 800, 600, false, ev_handler};
 
 	ev_handler.add_key_event(on_esc_press);
+	ev_handler.add_mouse_event(on_mouse_event);
 
 	std::ifstream frag_shader{"../res/shaders/fragment_shaders/test_shader.fs"};
 	std::ifstream vert_shader{"../res/shaders/vertex_shaders/test_shader.vs"};
@@ -74,6 +88,10 @@ int main() {
 	int off_x_pos = test_shader.get_uniform_location("off_x");
 
 	rendering::mesh rect = std::move(rendering::mesh::create(vertices, indices, GL_STATIC_DRAW));
+
+	//button test
+	Button button{-0.95, 0.85, 0.1, 0.08};
+	window.add_widget(std::move(button));
 	
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -84,6 +102,7 @@ int main() {
 		glUniform1f(off_x_pos, window.get_off_x());
 
 		rect.draw();
+		window.render_widgets();
 
     	window.update();
 	}
@@ -108,4 +127,8 @@ void on_esc_press(rendering::render_window* window, int key, int scancode, int a
 				break;
 		}
 	}
+}
+
+void on_mouse_event(rendering::render_window* window, double x, double y) {
+	std::cout << x << ", " << y << std::endl;
 }

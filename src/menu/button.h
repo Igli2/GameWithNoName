@@ -1,12 +1,21 @@
 #pragma once
 
+#include "../rendering/mesh.h"
+
 class Button {
     private:
-        int x;
-        int y;
-        int width;
-        int height;
+        float x;
+        float y;
+        float width;
+        float height;
+        bool visible;
+        rendering::mesh shape;
+
+        std::vector<float> get_vertices();
     public:
-        Button(int x, int y, int width, int height);
-        render();
+        Button();
+        Button(float x, float y, float width, float height);
+        void render();
+        bool is_visible();
+        void set_visible(bool state);
 };

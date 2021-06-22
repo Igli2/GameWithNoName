@@ -18,6 +18,7 @@ set(SOURCE_FILES
     src/rendering/mesh.cpp
     src/events/event_handler.cpp
     src/menu/resource_menu.cpp
+    src/menu/button.cpp
 
     src/rendering/render_window.h
     src/rendering/shader.h
@@ -25,6 +26,7 @@ set(SOURCE_FILES
     src/events/event_handler.h
     src/events/events.h
     src/menu/resource_menu.h
+    src/menu/button.h
 )
 
 add_executable(game src/game.cpp ${SOURCE_FILES})
