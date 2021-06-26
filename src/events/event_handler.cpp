@@ -45,6 +45,8 @@ bool event_handler::remove_mouse_button_event(const mouse_button_event event) {
     if(pos == this->mouse_button_events.end()) return false;
 
     this->mouse_button_events.erase(pos);
+
+    return true;
 }
 
 void event_handler::add_scroll_event(const scroll_event event) {
@@ -57,6 +59,8 @@ bool event_handler::remove_scroll_event(const scroll_event event) {
     if(pos == this->scroll_events.end()) return false;
 
     this->scroll_events.erase(pos);
+
+    return true;
 }
 
 void event_handler::key_press_callback(rendering::render_window* window, int key, int scancode, int action, int mods) {
