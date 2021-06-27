@@ -98,6 +98,10 @@ void render_window::get_mouse_position(double* x, double* y) {
     glfwGetCursorPos(this->window, x, y);
 }
 
+void render_window::get_window_size(int* width, int* height) {
+    glfwGetWindowSize(this->window, width, height);
+}
+
 void render_window::close() {
     glfwSetWindowShouldClose(this->window, GL_TRUE);
 }
