@@ -12,6 +12,8 @@
 #include "rendering/shader.h"
 #include "rendering/mesh.h"
 #include "rendering/texture.h"
+#include "rendering/buffer.h"
+#include "rendering/vao.h"
 #include "events/event_handler.h"
 #include "menu/resource_menu.h"
 #include "menu/button.h"
@@ -105,8 +107,8 @@ int main() {
 	ev_handler.add_key_event(on_key_press);
 	ev_handler.add_mouse_button_event(on_mouse_button_press);
 
-	std::ifstream frag_shader{"../res/shaders/fragment_shaders/texture_shader.fs"};
-	std::ifstream vert_shader{"../res/shaders/vertex_shaders/texture_shader.vs"};
+	std::ifstream frag_shader{"../res/shaders/fragment_shaders/overlay_texture_shader.fs"};
+	std::ifstream vert_shader{"../res/shaders/vertex_shaders/overlay_texture_shader.vs"};
 
 	if(!frag_shader.is_open() || !vert_shader.is_open()) {
 		std::cerr << "Unable to open shader files!" << std::endl;
@@ -121,7 +123,7 @@ int main() {
 	vert_shader.close();
 
 	rendering::shader_program texture_shader{shaders};
-	//int off_x_pos = test_shader.get_uniform_location("off_x");
+	int offset_pos = texture_shader.get_uniform_location("offset");
 
 	rendering::mesh rect = rendering::mesh::create(vertices, indices, GL_STATIC_DRAW);
 	rect.set_float_vertex_attribute(tex_coords, 1, 2, GL_STATIC_DRAW);
@@ -132,16 +134,32 @@ int main() {
 	Button button{10.0f, 10.0f, 100.0f, 80.0f};
 	window.add_widget(std::move(button));
 	
+	//buffer test
+	rendering::buffer vert = rendering::buffer::create(vertices.size() * sizeof(float), &vertices[0], GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+	rendering::buffer ind = rendering::buffer::create(indices.size() * sizeof(float), &indices[0], GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+	rendering::buffer tex_c = rendering::buffer::create(tex_coords.size() * sizeof(float), &tex_coords[0], GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+
+	rendering::vao vao_test{};
+	vao_test.set_element_buffer(ind);
+	vao_test.set_vertex_attrib(vert, 0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	vao_test.set_vertex_attrib(tex_c, 1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	texture_shader.use();
 	tex.use();
+
+	glUniform2f(offset_pos, -0.4f, 0.2f);
 	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
+
+		vao_test.bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 		//glUniform1f(off_x_pos, window.get_off_x());
 
-		rect.draw();
+		//rect.draw();
 		window.render_widgets();
 
     	window.update();

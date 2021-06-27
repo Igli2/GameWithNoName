@@ -14,6 +14,8 @@ add_subdirectory(glfw)
 
 set(SOURCE_FILES
     src/rendering/render_window.cpp
+    src/rendering/buffer.cpp
+    src/rendering/vao.cpp
     src/rendering/shader.cpp
     src/rendering/mesh.cpp
     src/rendering/texture.cpp
@@ -22,6 +24,8 @@ set(SOURCE_FILES
     src/menu/button.cpp
 
     src/rendering/render_window.h
+    src/rendering/buffer.h
+    src/rendering/vao.h
     src/rendering/shader.h
     src/rendering/mesh.h
     src/rendering/texture.h
