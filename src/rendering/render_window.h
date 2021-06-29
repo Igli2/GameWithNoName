@@ -24,6 +24,7 @@ namespace rendering {
             void mouse_button_event(int button, int action, int mods);
             void scroll_event(double xoffset, double yoffset);
             void get_mouse_position(double* x, double* y);
+            void get_window_size(int* width, int* height);
             void close();
             virtual ~render_window();
     };    

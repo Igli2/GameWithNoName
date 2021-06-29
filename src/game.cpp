@@ -26,10 +26,21 @@ class game_window : public rendering::render_window {
 	private:
 		float off_x;
 		std::vector<Button> widgets;
+		ResourceMenu resource_menu;
+
 	public:
 		game_window(const std::string& title, const size_t width, const size_t height, const bool resizable, event::event_handler& ev_handler)
 		 : render_window{title, width, height, resizable, ev_handler}, off_x{0} {
-			
+			// button test
+			Button button{10.0f, 10.0f, 100.0f, 80.0f};
+			this->add_widget(std::move(button));
+
+			// set initial resource menu size
+			int w, h;
+			this->get_window_size(&w, &h);
+			this->resource_menu.updateWindowSize(w, h);
+			this->resource_menu.addResources(Resource::BEECH_LOG, 10);
+			this->resource_menu.removeResources(Resource::BEECH_LOG, 2);
 		}
 
 		float get_off_x() const {
@@ -48,6 +59,7 @@ class game_window : public rendering::render_window {
 			for (Button& button : this->widgets) {
 				button.render();
 			}
+			this->resource_menu.render();
 		}
 
 		// checks all button widgets if they were pressed / released
@@ -78,12 +90,6 @@ constexpr size_t WINDOW_WIDTH = 800;
 constexpr size_t WINDOW_HEIGHT = 600;
 
 int main() {
-	//menu test
-	Menu menu;
-	menu.addResources(Resource::BEECH_LOG, 10);
-	menu.removeResources(Resource::BEECH_LOG, 8);
-	menu.removeResources(Resource::BEECH_LOG, 8);
-	
 	std::vector<float> vertices{{
 		0.0f, 0.0f,
 		200.0f, 0.0f,
@@ -132,10 +138,6 @@ int main() {
 	rendering::mesh rect = rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices, tex_coords);
 
 	rendering::texture tex = rendering::texture::load_from_file("../res/textures/test.png", GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_REPEAT, GL_RGB);
-
-	//button test
-	Button button{10.0f, 10.0f, 100.0f, 80.0f};
-	window.add_widget(std::move(button));
 	
 
 	texture_shader.use();

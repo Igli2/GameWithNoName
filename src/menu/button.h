@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "../rendering/mesh.h"
 
 class Button {
@@ -11,6 +13,7 @@ class Button {
         bool visible;
         bool pressed;
         rendering::mesh shape;
+        std::string text;
 
         std::vector<float> get_vertices();
     public:
@@ -21,6 +24,8 @@ class Button {
         void set_visible(bool state);
         bool is_pressed();
         void set_pressed(bool state);
+        const std::string get_text();
+        void set_text(std::string text);
         //detect if button was clicked with mouse click
         bool collision(const double& mouse_x, const double& mouse_y);
         void on_mouse_release();
