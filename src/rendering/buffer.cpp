@@ -19,8 +19,12 @@ void buffer::bind() {
     glBindBuffer(this->type, this->id);
 }
 
-void buffer::unbind() {
-    glBindBuffer(this->type, 0);
+bool buffer::empty() {
+    return this->id == 0;
+}
+
+const GLenum buffer::get_type() {
+    return this->type;
 }
 
 unsigned int buffer::release() {

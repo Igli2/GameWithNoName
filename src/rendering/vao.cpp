@@ -19,22 +19,25 @@ unsigned int vao::release() {
 }
 
 void vao::set_element_buffer(buffer& ebo) {
+    if(ebo.get_type() != GL_ELEMENT_ARRAY_BUFFER) return;
     this->bind();
     ebo.bind();
 
     glBindVertexArray(0);
-    ebo.unbind();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void vao::set_vertex_attrib(buffer& buf, const unsigned int va,
                             const size_t size, const GLenum type, const GLboolean normalized, const size_t stride, const size_t offset) {
+    if(buf.get_type() != GL_ARRAY_BUFFER) return;
+    
     this->bind();
     buf.bind();
 
     glVertexAttribPointer(va, size, type, normalized, stride, (void*)offset);
 
     glBindVertexArray(0);
-    buf.unbind();
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     this->enable_vertex_attrib(va);
 }

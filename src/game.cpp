@@ -104,6 +104,13 @@ int main() {
 		0.0f, 1.0f
 	}};
 
+	std::vector<float> vertices_color{{
+		1.0f, 0.7f, 0.2f, 1.0f,
+		0.0f, 0.37f, 0.7f, 1.0f,
+		0.3f, 0.23f, 0.2f, 1.0f,
+		0.64f, 1.0f, 0.6f, 1.0f
+	}};
+
 	std::vector<unsigned int> indices{{
 		0, 1, 3,
 		1, 2, 3
@@ -134,15 +141,24 @@ int main() {
 	rendering::shader_program texture_shader{shaders};
 	const int window_bounds_location = texture_shader.get_uniform_location("window_bounds");
 	const int offset_location = texture_shader.get_uniform_location("offset");
+	const int has_texture_location = texture_shader.get_uniform_location("has_texture");
+	const int use_color_location = texture_shader.get_uniform_location("use_color");
 
-	rendering::mesh rect = rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices, tex_coords);
+	rendering::mesh rect = rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices);
+
+	rendering::buffer tex_buf = rendering::buffer::create(tex_coords.size() * sizeof(float), &tex_coords[0], GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+	rect.set_data(1, tex_buf, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+
+	rendering::buffer col_buf = rendering::buffer::create(vertices_color.size() * sizeof(float), &vertices_color[0], GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+	rect.set_data(2, col_buf, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
 
 	rendering::texture tex = rendering::texture::load_from_file("../res/textures/test.png", GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_REPEAT, GL_RGB);
 	
-
 	texture_shader.use();
 	glUniform2f(window_bounds_location, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
 	glUniform2f(offset_location, 600.0f, 299.0f);
+	glUniform1i(has_texture_location, 1);
+	glUniform1i(use_color_location, 1);
 
 	tex.use();
 

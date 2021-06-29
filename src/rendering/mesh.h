@@ -22,12 +22,12 @@ namespace rendering {
             mesh(mesh&& other);
             mesh(const mesh& other) = delete;
             void draw();
+            bool set_data(const size_t i, buffer& buf, const size_t size, const GLenum type, const GLboolean normalized, const size_t stride, const size_t offset);
             ~mesh();
 
             mesh& operator=(mesh&& other);
             mesh& operator=(const mesh& other) = delete;
 
-            static mesh create(const GLenum draw_type, const size_t dimensions,
-                               const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<float>& texture_coords = {});
+            static mesh create(const GLenum draw_type, const size_t dimensions, const std::vector<float>& vertices, const std::vector<unsigned int>& indices);
     };   
 }

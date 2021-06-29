@@ -2,8 +2,10 @@
 
 layout (location = 0) in vec2 pos;
 layout (location = 1) in vec2 in_tex_coord;
+layout (location = 2) in vec4 in_overlay_color;
 
 out vec2 tex_coord;
+out vec4 overlay_color;
 
 uniform vec2 window_bounds;
 uniform vec2 offset;
@@ -14,4 +16,5 @@ void main() {
     gl_Position.y = 1 - (pos.y + offset.y) / window_bounds.y * 2;
     
     tex_coord = in_tex_coord;
+    overlay_color = in_overlay_color;
 }
