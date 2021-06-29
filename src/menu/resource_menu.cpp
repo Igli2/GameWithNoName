@@ -60,7 +60,7 @@ void ResourceMenu::updateWindowSize(const int width, const int height) {
         1, 2, 3
     }};
 
-    this->background = std::move(rendering::mesh::create(vertices, indices, GL_STATIC_DRAW));
+    this->background = std::move(rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices));
 }
 
 void ResourceMenu::render() {
