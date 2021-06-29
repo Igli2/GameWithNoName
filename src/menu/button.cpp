@@ -12,7 +12,7 @@ Button::Button(float x, float y, float width, float height): x{x}, y{y}, width{w
 		1, 2, 3
 	}};
 
-    this->shape = std::move(rendering::mesh::create(vertices, indices, GL_STATIC_DRAW));
+    this->shape = std::move(rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices));
 }
 
 void Button::render() {
@@ -23,10 +23,10 @@ void Button::render() {
 
 std::vector<float> Button::get_vertices() {
     std::vector<float> vertices{{
-        this->x, this->y, 0.0f,
-        this->x + this->width, this->y, 0.0f,
-        this->x, this->y + this->height, 0.0f,
-        this->x + this->width, this->y + this->height, 0.0f
+        this->x, this->y,
+        this->x + this->width, this->y,
+        this->x, this->y + this->height,
+        this->x + this->width, this->y + this->height
     }};
 
     return std::move(vertices);

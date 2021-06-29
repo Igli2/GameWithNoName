@@ -74,6 +74,9 @@ class game_window : public rendering::render_window {
 		}
 };
 
+constexpr size_t WINDOW_WIDTH = 800;
+constexpr size_t WINDOW_HEIGHT = 600;
+
 int main() {
 	//menu test
 	Menu menu;
@@ -82,10 +85,10 @@ int main() {
 	menu.removeResources(Resource::BEECH_LOG, 8);
 	
 	std::vector<float> vertices{{
-		0.5f, 0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		-0.5f, -0.5f, 0.0f,
-		-0.5f, 0.5f, 0.0f
+		0.0f, 0.0f,
+		200.0f, 0.0f,
+		200.0f, 300.0f,
+		0.0f, 300.0f
 	}};
 
 	std::vector<float> tex_coords{{
@@ -102,7 +105,7 @@ int main() {
 
 	// init window & attributes
 	event::event_handler ev_handler{};
-	game_window window{"Game", 800, 600, false, ev_handler};
+	game_window window{"Game", WINDOW_WIDTH, WINDOW_HEIGHT, false, ev_handler};
 
 	ev_handler.add_key_event(on_key_press);
 	ev_handler.add_mouse_button_event(on_mouse_button_press);
@@ -123,10 +126,10 @@ int main() {
 	vert_shader.close();
 
 	rendering::shader_program texture_shader{shaders};
-	int offset_pos = texture_shader.get_uniform_location("offset");
+	const int window_bounds_location = texture_shader.get_uniform_location("window_bounds");
+	const int offset_location = texture_shader.get_uniform_location("offset");
 
-	rendering::mesh rect = rendering::mesh::create(vertices, indices, GL_STATIC_DRAW);
-	rect.set_float_vertex_attribute(tex_coords, 1, 2, GL_STATIC_DRAW);
+	rendering::mesh rect = rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices, tex_coords);
 
 	rendering::texture tex = rendering::texture::load_from_file("../res/textures/test.png", GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_REPEAT, GL_RGB);
 
@@ -134,32 +137,18 @@ int main() {
 	Button button{10.0f, 10.0f, 100.0f, 80.0f};
 	window.add_widget(std::move(button));
 	
-	//buffer test
-	rendering::buffer vert = rendering::buffer::create(vertices.size() * sizeof(float), &vertices[0], GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-	rendering::buffer ind = rendering::buffer::create(indices.size() * sizeof(float), &indices[0], GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
-	rendering::buffer tex_c = rendering::buffer::create(tex_coords.size() * sizeof(float), &tex_coords[0], GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-
-	rendering::vao vao_test{};
-	vao_test.set_element_buffer(ind);
-	vao_test.set_vertex_attrib(vert, 0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-	vao_test.set_vertex_attrib(tex_c, 1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	texture_shader.use();
+	glUniform2f(window_bounds_location, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
+	glUniform2f(offset_location, 600.0f, 299.0f);
+
 	tex.use();
 
-	glUniform2f(offset_pos, -0.4f, 0.2f);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
-
-		vao_test.bind();
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-		//glUniform1f(off_x_pos, window.get_off_x());
-
-		//rect.draw();
+		rect.draw();
 		window.render_widgets();
 
     	window.update();
