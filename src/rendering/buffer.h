@@ -12,11 +12,12 @@ namespace rendering {
             GLenum type;
 
             buffer();
+            void delete_data();
         public:
             buffer(const buffer& other) = delete;
             buffer(buffer&& other);
-            void delete_data();
             void bind();
+            void unbind();
             //unsigned int get();
             unsigned int release();
             ~buffer();

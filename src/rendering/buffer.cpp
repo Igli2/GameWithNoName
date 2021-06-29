@@ -1,16 +1,14 @@
 #include "buffer.h"
 
+//#include <iostream>
+#include <utility>
+
 using namespace rendering;
 
 buffer::buffer(buffer&& other) {
+    this->delete_data();
     this->id = other.release();
-}
-
-void buffer::delete_data() {
-    if(this->id != 0) {
-        glDeleteBuffers(1, &this->id);
-        this->id = 0;
-    }
+    this->type = other.type;
 }
 
 /*unsigned int buffer::get() {
@@ -19,6 +17,10 @@ void buffer::delete_data() {
 
 void buffer::bind() {
     glBindBuffer(this->type, this->id);
+}
+
+void buffer::unbind() {
+    glBindBuffer(this->type, 0);
 }
 
 unsigned int buffer::release() {
@@ -33,7 +35,9 @@ buffer::~buffer() {
 }
 
 buffer& buffer::operator=(buffer&& other) {
+    this->delete_data();
     this->id = other.release();
+    this->type = other.type;
 
     return *this;
 }
@@ -53,4 +57,11 @@ buffer buffer::create(const size_t data_size, const void* data, const GLenum typ
 //private
 buffer::buffer() : id{0}, type{} {
     glGenBuffers(1, &this->id);
+}
+
+void buffer::delete_data() {
+    if(this->id != 0) {
+        glDeleteBuffers(1, &this->id);
+        this->id = 0;
+    }
 }
