@@ -6,27 +6,28 @@
 #include <vector>
 #include <cstddef>
 
+#include "buffer.h"
+#include "vao.h"
+
 namespace rendering {
     class mesh {
         private:
             size_t indices_count;
 
-            unsigned int vao;
-            unsigned int vbo;
-            unsigned int ebo;
+            vao va;
 
-            std::vector<unsigned int> vertex_attributes;
+            std::vector<buffer> buffers;
         public:
             mesh();
             mesh(mesh&& other);
             mesh(const mesh& other) = delete;
-            void set_float_vertex_attribute(const std::vector<float>& values, const GLint index, const GLint size, const GLenum draw_type);
             void draw();
             ~mesh();
 
             mesh& operator=(mesh&& other);
             mesh& operator=(const mesh& other) = delete;
 
-            static mesh create(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const GLenum draw_type);
+            static mesh create(const GLenum draw_type, const size_t dimensions,
+                               const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const std::vector<float>& texture_coords = {});
     };   
 }

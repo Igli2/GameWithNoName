@@ -7,8 +7,8 @@ vao::vao() {
 }
 
 vao::vao(vao&& other) {
-    this->id = other.id;
-    other.id = 0;
+    this->delete_data();
+    this->id = other.release();
 }
 
 unsigned int vao::release() {
@@ -23,7 +23,7 @@ void vao::set_element_buffer(buffer& ebo) {
     ebo.bind();
 
     glBindVertexArray(0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    ebo.unbind();
 }
 
 void vao::set_vertex_attrib(buffer& buf, const unsigned int va,
@@ -34,6 +34,7 @@ void vao::set_vertex_attrib(buffer& buf, const unsigned int va,
     glVertexAttribPointer(va, size, type, normalized, stride, (void*)offset);
 
     glBindVertexArray(0);
+    buf.unbind();
 
     this->enable_vertex_attrib(va);
 }
@@ -63,8 +64,8 @@ vao::~vao() {
 }
 
 vao& vao::operator=(vao&& other) {
-    this->id = other.id;
-    other.id = 0;
+    this->delete_data();
+    this->id = other.release();
 
     return *this;
 }
