@@ -3,6 +3,7 @@
 #include <map>
 
 #include "../rendering/mesh.h"
+#include "../rendering/texture.h"
 
 enum Resource {
     BEECH_LOG,
@@ -29,6 +30,7 @@ class ResourceMenu {
         int scroll;
         std::vector<ResourceEntry> resource_entries;
         rendering::mesh background;
+        rendering::texture background_texture;
     public:
         ResourceMenu();
         // add resources

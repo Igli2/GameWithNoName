@@ -14,6 +14,8 @@ void ResourceEntry::render() {
 
 
 ResourceMenu::ResourceMenu(): resource_entries{}, scroll{0} {
+    this->background_texture = rendering::texture::load_from_file("../res/textures/menu_background.png", GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_REPEAT, GL_RGBA);
+
     for (int resource_int = Resource::BEECH_LOG; resource_int != Resource::MAX; resource_int++) {
         Resource resource = static_cast<Resource>(resource_int);
 
@@ -48,11 +50,12 @@ bool ResourceMenu::removeResources(Resource resource, unsigned int amount) {
 void ResourceMenu::updateWindowSize(const int width, const int height) {
     float w = static_cast<float>(width);
     float h = static_cast<float>(height);
+    std::cout << w << " " << h << std::endl;
     std::vector<float> vertices{{
-        100, 50, 0.0f,
-        w - 100, 50, 0.0f,
-        100, h - 50, 0.0f,
-        w - 100, h - 50, 0.0f
+        100, 50,
+        w - 100, 50,
+        100, h - 50,
+        w - 100, h - 50
     }};
 
     std::vector<unsigned int> indices{{
@@ -60,12 +63,20 @@ void ResourceMenu::updateWindowSize(const int width, const int height) {
         1, 2, 3
     }};
 
-    this->background = std::move(rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices));
+    std::vector<float> tex_coords{{
+		1.0f, 1.0f,
+		1.0f, 0.0f,
+		0.0f, 0.0f,
+		0.0f, 1.0f
+	}};
+
+    this->background = std::move(rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices, tex_coords));
 }
 
 void ResourceMenu::render() {
-    this->background.draw();
     for (ResourceEntry r_entry : this->resource_entries) {
         r_entry.render();
     }
+    this->background_texture.use();
+    this->background.draw();
 }

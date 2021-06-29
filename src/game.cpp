@@ -57,7 +57,7 @@ class game_window : public rendering::render_window {
 
 		void render_widgets() {
 			for (Button& button : this->widgets) {
-				button.render();
+				// button.render();
 			}
 			this->resource_menu.render();
 		}
