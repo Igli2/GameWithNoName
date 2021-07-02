@@ -1,9 +1,7 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
 #include <fstream>
-#include <vector>
 #include <stdexcept>
+#include <vector>
+#include <cstddef>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -11,83 +9,16 @@
 
 #include "rendering/render_window.h"
 #include "rendering/shader.h"
-#include "rendering/mesh.h"
 #include "rendering/texture.h"
-#include "rendering/buffer.h"
-#include "rendering/vao.h"
-#include "events/event_handler.h"
-#include "menu/resource_menu.h"
-#include "menu/button.h"
+
 #include "utils/registry.h"
+
+#include "game_window.h"
 
 void on_mouse_button_press(rendering::render_window* window, int button, int action, int mods);
 void register_shaders(utils::registry<rendering::shader_program>& shader_registry);
 void register_textures(utils::registry<rendering::texture>& texture_registry);
 rendering::shader_program load_shader(const std::string& vert_path, const std::string& frag_path);
-
-class game_window : public rendering::render_window {
-	private:
-		float off_x;
-		std::vector<Button> widgets;
-		ResourceMenu resource_menu;
-
-	public:
-		game_window(const std::string& title, const size_t width, const size_t height, const bool resizable, event::event_handler& ev_handler)
-		 : render_window{title, width, height, resizable, ev_handler}, off_x{0} {
-			// button test
-			Button button{10.0f, 10.0f, 100.0f, 80.0f};
-			this->add_widget(std::move(button));
-
-			// set initial resource menu size
-			int w, h;
-			this->get_window_size(&w, &h);
-			this->resource_menu.updateWindowSize(w, h);
-			this->resource_menu.addResources(Resource::BEECH_LOG, 10);
-			this->resource_menu.removeResources(Resource::BEECH_LOG, 2);
-		}
-
-		float get_off_x() const {
-			return this->off_x;
-		}
-
-		void set_off_x(const float value) {
-			this->off_x = value;
-		}
-
-		void add_widget(Button button) {
-			this->widgets.push_back(std::move(button));
-		}
-
-		void render_widgets() {
-			for (Button& button : this->widgets) {
-				// button.render();
-			}
-			this->resource_menu.render();
-		}
-
-		// checks all button widgets if they were pressed / released
-		void on_mouse_button_press(rendering::render_window* window, int button, int action, int mods) {
-			double x, y;
-			window->get_mouse_position(&x, &y);
-
-			if (action == GLFW_PRESS) {
-				if (button == GLFW_MOUSE_BUTTON_LEFT) {
-					for (Button& b : this->widgets) {
-						if (b.collision(x, y)) {
-							b.set_pressed(true);
-							break;
-						}
-					}
-				}
-			} else {
-				if (button == GLFW_MOUSE_BUTTON_LEFT) {
-					for (Button& b : this->widgets) {
-						b.on_mouse_release();
-					}
-				}
-			}
-		}
-};
 
 constexpr size_t WINDOW_WIDTH = 800;
 constexpr size_t WINDOW_HEIGHT = 600;
@@ -132,10 +63,12 @@ int main() {
 
 	ev_handler.add_mouse_button_event(on_mouse_button_press);
 
-	const int window_bounds_location = shader_registry.get("overlay_shader").get_uniform_location("window_bounds");
-	const int offset_location = shader_registry.get("overlay_shader").get_uniform_location("offset");
-	const int has_texture_location = shader_registry.get("overlay_shader").get_uniform_location("has_texture");
-	const int use_color_location = shader_registry.get("overlay_shader").get_uniform_location("use_color");
+	rendering::shader_program& overlay_shader = shader_registry.get("overlay_shader");
+
+	const int window_bounds_location = overlay_shader.get_uniform_location("window_bounds");
+	const int offset_location = overlay_shader.get_uniform_location("offset");
+	const int has_texture_location = overlay_shader.get_uniform_location("has_texture");
+	const int use_color_location = overlay_shader.get_uniform_location("use_color");
 
 	rendering::mesh rect = rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices);
 
@@ -145,7 +78,7 @@ int main() {
 	rendering::buffer col_buf = rendering::buffer::create(vertices_color.size() * sizeof(float), &vertices_color[0], GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 	rect.set_data(2, col_buf, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
 
-	shader_registry.get("overlay_shader").use();
+	overlay_shader.use();
 	glUniform2f(window_bounds_location, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
 	glUniform2f(offset_location, 600.0f, 299.0f);
 	glUniform1i(has_texture_location, 1);
