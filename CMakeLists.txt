@@ -33,6 +33,9 @@ set(SOURCE_FILES
     src/events/events.h
     src/menu/resource_menu.h
     src/menu/button.h
+    src/utils/registry.h
+
+    src/utils/registry.ipp
 )
 
 include_directories(includes/)
