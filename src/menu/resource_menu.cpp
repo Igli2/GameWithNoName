@@ -70,7 +70,10 @@ void ResourceMenu::updateWindowSize(const int width, const int height) {
 		0.0f, 1.0f
 	}};
 
-    this->background = std::move(rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices, tex_coords));
+   // this->background = std::move(rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices, tex_coords));
+   this->background = std::move(rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices));
+   rendering::buffer texture_data = rendering::buffer::create(tex_coords.size() * sizeof(float), &tex_coords[0], GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+   this->background.set_data(1, texture_data, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 }
 
 void ResourceMenu::render() {
