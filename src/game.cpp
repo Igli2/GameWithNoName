@@ -10,6 +10,7 @@
 #include "rendering/render_window.h"
 #include "rendering/shader.h"
 #include "rendering/texture.h"
+#include "rendering/shader_constants.h"
 
 #include "utils/registry.h"
 
@@ -21,8 +22,8 @@ void register_textures(utils::registry<rendering::texture>& texture_registry);
 rendering::shader load_shader(const std::string& path, GLenum type);
 rendering::shader_program load_shader_program(const std::string& vert_path, const std::string& frag_path);
 
-constexpr size_t WINDOW_WIDTH = 800;
-constexpr size_t WINDOW_HEIGHT = 600;
+const size_t WINDOW_WIDTH = 800;
+const size_t WINDOW_HEIGHT = 600;
 
 int main() {
 	std::vector<float> vertices{{
@@ -63,20 +64,13 @@ int main() {
 	register_textures(texture_registry);
 
 	ev_handler.add_mouse_button_event(on_mouse_button_press);
-
-	rendering::shader_program& overlay_shader = shader_registry.get("overlay_shader");
-
-	const int window_bounds_location = overlay_shader.get_uniform_location("window_bounds");
-	const int offset_location = overlay_shader.get_uniform_location("offset");
-	const int has_texture_location = overlay_shader.get_uniform_location("has_texture");
-	const int use_color_location = overlay_shader.get_uniform_location("use_color");
 	
 	rendering::mesh rect = rendering::mesh::create_with_texture_and_color(GL_STATIC_DRAW, 2, vertices, indices, tex_coords, vertices_color);
 	rect.set_texture_usage(false);
 
-	overlay_shader.use();
-	glUniform2f(window_bounds_location, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
-	glUniform2f(offset_location, 0.0f, 0.0f);
+	shader_registry.get("overlay_shader").use();
+	glUniform2f(shader_const::WINDOW_BOUNDS_LOCATION, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
+	glUniform2f(shader_const::OFFSET_LOCATION, 10.0f, 0.0f);
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	while(window.is_open()) {

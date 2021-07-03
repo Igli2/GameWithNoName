@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "resource_menu.h"
 
 ResourceEntry::ResourceEntry(float x, float y, float width, float height)
@@ -50,7 +48,7 @@ bool ResourceMenu::removeResources(Resource resource, unsigned int amount) {
 void ResourceMenu::updateWindowSize(const int width, const int height) {
     float w = static_cast<float>(width);
     float h = static_cast<float>(height);
-    std::cout << w << " " << h << std::endl;
+
     std::vector<float> vertices{{
         100, 50,
         w - 100, 50,
