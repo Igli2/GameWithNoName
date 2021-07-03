@@ -24,11 +24,6 @@ rendering::shader_program load_shader_program(const std::string& vert_path, cons
 constexpr size_t WINDOW_WIDTH = 800;
 constexpr size_t WINDOW_HEIGHT = 600;
 
-/*
-	DO NOT ANY NEW CODE BEFORE REFACTORING IS DONE!
-	FURTHERMORE, THINK AbOUT A GOOD RENDERING CONCEPT
-*/
-
 int main() {
 	std::vector<float> vertices{{
 		0.0f, 0.0f,
