@@ -1,4 +1,5 @@
 #version 330 core
+#extension GL_ARB_explicit_uniform_location : enable
 
 in vec2 tex_coord;
 in vec4 overlay_color;
@@ -6,8 +7,8 @@ in vec4 overlay_color;
 out vec4 FragColor;
 
 uniform sampler2D in_tex;
-uniform bool has_texture;
-uniform bool use_color;
+layout (location = 2) uniform bool use_texture;
+layout (location = 3) uniform bool use_color;
 
 void main() {
 
@@ -16,5 +17,5 @@ void main() {
     } else {
         FragColor = vec4(1.0);
     }
-    if(has_texture) FragColor *= texture(in_tex, tex_coord);
+    if(use_texture) FragColor *= texture(in_tex, tex_coord);
 }

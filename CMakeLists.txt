@@ -31,6 +31,7 @@ set(SOURCE_FILES
     src/rendering/shader.h
     src/rendering/mesh.h
     src/rendering/texture.h
+    src/rendering/shader_constants.h
     src/events/event_handler.h
     src/events/events.h
     src/menu/resource_menu.h

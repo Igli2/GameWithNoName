@@ -18,10 +18,16 @@
 void on_mouse_button_press(rendering::render_window* window, int button, int action, int mods);
 void register_shaders(utils::registry<rendering::shader_program>& shader_registry);
 void register_textures(utils::registry<rendering::texture>& texture_registry);
-rendering::shader_program load_shader(const std::string& vert_path, const std::string& frag_path);
+rendering::shader load_shader(const std::string& path, GLenum type);
+rendering::shader_program load_shader_program(const std::string& vert_path, const std::string& frag_path);
 
 constexpr size_t WINDOW_WIDTH = 800;
 constexpr size_t WINDOW_HEIGHT = 600;
+
+/*
+	DO NOT ANY NEW CODE BEFORE REFACTORING IS DONE!
+	FURTHERMORE, THINK AbOUT A GOOD RENDERING CONCEPT
+*/
 
 int main() {
 	std::vector<float> vertices{{
@@ -69,28 +75,21 @@ int main() {
 	const int offset_location = overlay_shader.get_uniform_location("offset");
 	const int has_texture_location = overlay_shader.get_uniform_location("has_texture");
 	const int use_color_location = overlay_shader.get_uniform_location("use_color");
-
-	rendering::mesh rect = rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices);
-
-	rendering::buffer tex_buf = rendering::buffer::create(tex_coords.size() * sizeof(float), &tex_coords[0], GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-	rect.set_data(1, tex_buf, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-
-	rendering::buffer col_buf = rendering::buffer::create(vertices_color.size() * sizeof(float), &vertices_color[0], GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-	rect.set_data(2, col_buf, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+	
+	rendering::mesh rect = rendering::mesh::create_with_texture_and_color(GL_STATIC_DRAW, 2, vertices, indices, tex_coords, vertices_color);
+	rect.set_texture_usage(false);
 
 	overlay_shader.use();
 	glUniform2f(window_bounds_location, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
-	glUniform2f(offset_location, 600.0f, 299.0f);
-	glUniform1i(has_texture_location, 1);
-	glUniform1i(use_color_location, 1);
-
-	texture_registry.get("example_texture").use();
+	glUniform2f(offset_location, 0.0f, 0.0f);
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT);
-
+		
+		texture_registry.get("example_texture").use();
 		rect.draw();
+
 		window.render_widgets();
 
     	window.update();
@@ -107,7 +106,7 @@ void on_mouse_button_press(rendering::render_window* window, int button, int act
 }
 
 void register_shaders(utils::registry<rendering::shader_program>& shader_registry) {
-	shader_registry.insert("overlay_shader", std::move(load_shader("../res/shaders/vertex_shaders/overlay_texture_shader.vs",
+	shader_registry.insert("overlay_shader", std::move(load_shader_program("../res/shaders/vertex_shaders/overlay_texture_shader.vs",
 																   "../res/shaders/fragment_shaders/overlay_texture_shader.fs")));
 }
 
@@ -116,18 +115,23 @@ void register_textures(utils::registry<rendering::texture>& texture_registry) {
 														 GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_REPEAT, GL_RGB)));
 }
 
-rendering::shader_program load_shader(const std::string& vert_path, const std::string& frag_path) {
-	std::ifstream frag_shader{frag_path};
-	std::ifstream vert_shader{vert_path};
+rendering::shader load_shader(const std::string& path, GLenum type) {
+	std::ifstream shader_src{path};
 
-	if(!frag_shader.is_open() || !vert_shader.is_open()) throw std::runtime_error("Unable to open one of the shader files!");
+	if(!shader_src.is_open()) throw std::runtime_error("Unable to open file '" + path + "'!");
 
+	rendering::shader s = rendering::shader::from_stream(shader_src, type);
+
+	shader_src.close();
+
+	return s;
+}
+
+rendering::shader_program load_shader_program(const std::string& vert_path, const std::string& frag_path) {
 	std::vector<rendering::shader> shaders;
-	shaders.push_back(std::move(rendering::shader::from_stream(frag_shader, GL_FRAGMENT_SHADER)));
-	shaders.push_back(std::move(rendering::shader::from_stream(vert_shader, GL_VERTEX_SHADER)));
 
-	frag_shader.close();
-	vert_shader.close();
+	shaders.push_back(load_shader(vert_path, GL_VERTEX_SHADER));
+	shaders.push_back(load_shader(frag_path, GL_FRAGMENT_SHADER));
 
-	return std::move(rendering::shader_program{shaders});
+	return rendering::shader_program{shaders};
 }
