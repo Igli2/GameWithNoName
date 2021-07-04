@@ -1,4 +1,5 @@
 #version 330 core
+#extension GL_ARB_explicit_uniform_location : enable
 
 layout (location = 0) in vec2 pos;
 layout (location = 1) in vec2 in_tex_coord;
@@ -7,8 +8,8 @@ layout (location = 2) in vec4 in_overlay_color;
 out vec2 tex_coord;
 out vec4 overlay_color;
 
-uniform vec2 window_bounds;
-uniform vec2 offset;
+layout (location = 0) uniform vec2 window_bounds;
+layout (location = 1) uniform vec3 offset;
 
 void main() {
     gl_Position = vec4(0.0, 0.0, 0.0, 1.0);

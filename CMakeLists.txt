@@ -13,6 +13,7 @@ add_subdirectory(glad)
 add_subdirectory(glfw)
 
 set(SOURCE_FILES
+    src/game_window.cpp
     src/rendering/render_window.cpp
     src/rendering/buffer.cpp
     src/rendering/vao.cpp
@@ -23,16 +24,22 @@ set(SOURCE_FILES
     src/menu/resource_menu.cpp
     src/menu/button.cpp
 
+    src/game_window.h
     src/rendering/render_window.h
     src/rendering/buffer.h
     src/rendering/vao.h
     src/rendering/shader.h
     src/rendering/mesh.h
     src/rendering/texture.h
+    src/rendering/shader_constants.h
+    src/rendering/position.h
     src/events/event_handler.h
     src/events/events.h
     src/menu/resource_menu.h
     src/menu/button.h
+    src/utils/registry.h
+
+    src/utils/registry.ipp
 )
 
 include_directories(includes/)

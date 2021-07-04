@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "resource_menu.h"
 
 ResourceEntry::ResourceEntry(float x, float y, float width, float height)
@@ -79,7 +77,14 @@ void ResourceMenu::createBackground(const int width, const int height) {
         1, 2, 3
     }};
 
-    this->background = std::move(rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices));
+    std::vector<float> tex_coords{{
+		1.0f, 1.0f,
+		1.0f, 0.0f,
+		0.0f, 0.0f,
+		0.0f, 1.0f
+	}};
+
+   this->background = std::move(rendering::mesh::create_with_texture(GL_STATIC_DRAW, 2, vertices, indices, tex_coords));
 }
 
 void ResourceMenu::render() {
