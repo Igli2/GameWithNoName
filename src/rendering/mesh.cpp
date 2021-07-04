@@ -13,9 +13,10 @@ mesh::mesh(mesh&& other) {
     *this = std::move(other);
 }
 
-void mesh::draw() {
+void mesh::draw(const position& draw_position) {
     glUniform1i(shader_const::USE_TEXTURE_LOCATION, this->use_texture);
     glUniform1i(shader_const::USE_COLOR_LOCATION, this->use_color);
+    glUniform3f(shader_const::OFFSET_LOCATION, draw_position.x, draw_position.y, draw_position.z);
 
     this->data.bind();
 

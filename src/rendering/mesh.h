@@ -8,6 +8,7 @@
 
 #include "buffer.h"
 #include "vao.h"
+#include "position.h"
 
 namespace rendering {
     class mesh {
@@ -30,7 +31,7 @@ namespace rendering {
             mesh();
             mesh(mesh&& other);
             mesh(const mesh& other) = delete;
-            void draw();
+            void draw(const position& draw_position = {});
             void set_texture_usage(const bool state);
             void set_color_usage(const bool state);
             bool get_texture_usage();

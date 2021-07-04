@@ -9,7 +9,7 @@ out vec2 tex_coord;
 out vec4 overlay_color;
 
 layout (location = 0) uniform vec2 window_bounds;
-layout (location = 1) uniform vec2 offset;
+layout (location = 1) uniform vec3 offset;
 
 void main() {
     gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
