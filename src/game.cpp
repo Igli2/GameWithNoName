@@ -30,15 +30,12 @@ class game_window : public rendering::render_window {
 
 	public:
 		game_window(const std::string& title, const size_t width, const size_t height, const bool resizable, event::event_handler& ev_handler)
-		 : render_window{title, width, height, resizable, ev_handler}, off_x{0} {
+		 : render_window{title, width, height, resizable, ev_handler}, off_x{0}, resource_menu{(int)width, (int)height} {
 			// button test
 			Button button{10.0f, 10.0f, 100.0f, 80.0f};
 			this->add_widget(std::move(button));
 
-			// set initial resource menu size
-			int w, h;
-			this->get_window_size(&w, &h);
-			this->resource_menu.updateWindowSize(w, h);
+			// resource menu test
 			this->resource_menu.addResources(Resource::BEECH_LOG, 10);
 			this->resource_menu.removeResources(Resource::BEECH_LOG, 2);
 		}
@@ -118,7 +115,7 @@ int main() {
 
 	// init window & attributes
 	event::event_handler ev_handler{};
-	game_window window{"Game", WINDOW_WIDTH, WINDOW_HEIGHT, false, ev_handler};
+	game_window window{"Game", WINDOW_WIDTH, WINDOW_HEIGHT, true, ev_handler};
 
 	ev_handler.add_key_event(on_key_press);
 	ev_handler.add_mouse_button_event(on_mouse_button_press);
@@ -156,7 +153,7 @@ int main() {
 	
 	texture_shader.use();
 	glUniform2f(window_bounds_location, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
-	glUniform2f(offset_location, 600.0f, 299.0f);
+	// glUniform2f(offset_location, 600.0f, 299.0f);
 	glUniform1i(has_texture_location, 1);
 	glUniform1i(use_color_location, 1);
 
@@ -166,7 +163,7 @@ int main() {
 	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		rect.draw();
+		// rect.draw();
 		window.render_widgets();
 
     	window.update();
