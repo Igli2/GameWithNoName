@@ -71,14 +71,16 @@ int main() {
 	shader_registry.get("overlay_shader").use();
 	glUniform2f(shader_const::WINDOW_BOUNDS_LOCATION, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		window.render_widgets();
-
 		texture_registry.get("example_texture").use();
 		rect.draw(position{100.0, 200.0, 0.0});
+
+		window.render_widgets();
 
     	window.update();
 	}
