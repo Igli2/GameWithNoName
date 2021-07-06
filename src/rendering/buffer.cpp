@@ -5,6 +5,10 @@
 
 using namespace rendering;
 
+buffer::buffer() : type{} {
+    glGenBuffers(1, &this->id);
+}
+
 buffer::buffer(buffer&& other) {
     this->delete_data();
     this->id = other.release();
@@ -56,11 +60,6 @@ buffer buffer::create(const size_t data_size, const void* data, const GLenum typ
     glBindBuffer(type, 0);
 
     return b;
-}
-
-//private
-buffer::buffer() : id{0}, type{} {
-    glGenBuffers(1, &this->id);
 }
 
 void buffer::delete_data() {

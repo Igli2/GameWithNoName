@@ -11,9 +11,9 @@ namespace rendering {
             unsigned int id;
             GLenum type;
 
-            buffer();
             void delete_data();
         public:
+            buffer();
             buffer(const buffer& other) = delete;
             buffer(buffer&& other);
             void bind();
