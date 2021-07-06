@@ -12,8 +12,8 @@ namespace rendering {
         public:
             texture();
             texture(texture&& other);
-            void use();
             texture(const texture& other) = delete;
+            void use();
             ~texture();
 
             texture& operator=(texture&& other);
@@ -21,5 +21,7 @@ namespace rendering {
 
             static texture load_from_file(const std::string& filepath, const GLint min_filter, const GLint mag_filter,
                                           const GLint tex_wrap_s, const GLint tex_wrap_t, const GLint format);
+            static texture load(const void* data, const size_t width, const size_t height, const GLint min_filter, const GLint mag_filter,
+                                const GLint tex_wrap_s, const GLint tex_wrap_t, const GLint format);
     };    
 }

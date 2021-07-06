@@ -11,6 +11,7 @@
 #include "rendering/shader.h"
 #include "rendering/texture.h"
 #include "rendering/shader_constants.h"
+#include "rendering/font.h"
 
 #include "utils/registry.h"
 
@@ -20,6 +21,7 @@ void on_mouse_button_press(rendering::render_window* window, int button, int act
 void on_key_press(rendering::render_window* window, int key, int scancode, int action, int mods);
 void register_shaders(utils::registry<rendering::shader_program>& shader_registry);
 void register_textures(utils::registry<rendering::texture>& texture_registry);
+void register_fonts(utils::registry<rendering::font>& font_registry);
 rendering::shader load_shader(const std::string& path, GLenum type);
 rendering::shader_program load_shader_program(const std::string& vert_path, const std::string& frag_path);
 
@@ -64,6 +66,9 @@ int main() {
 	utils::registry<rendering::texture> texture_registry;
 	register_textures(texture_registry);
 
+	utils::registry<rendering::font> font_registry;
+	register_fonts(font_registry);
+
 	ev_handler.add_mouse_button_event(on_mouse_button_press);
 	ev_handler.add_key_event(on_key_press);
 	
@@ -73,16 +78,25 @@ int main() {
 	shader_registry.get("overlay_shader").use();
 	glUniform2f(shader_const::WINDOW_BOUNDS_LOCATION, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
 
+	shader_registry.get("font_shader").use();
+	glUniform2f(shader_const::WINDOW_BOUNDS_LOCATION, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		shader_registry.get("overlay_shader").use();
+
 		texture_registry.get("example_texture").use();
-		rect.draw(position{100.0, 200.0, 0.0});
+		rect.draw(vec3<float>{100.0f, 200.0f, 0.0f});
 
 		window.render_widgets();
+
+		shader_registry.get("font_shader").use();
+
+		font_registry.get("example_font").draw_string("Hello World!", 0.75f, vec4<float>{0.78f, 0.59f, 0.24f, 1.0f}, vec3<float>{0.0f, 50.0f, 0.0f});
 
     	window.update();
 	}
@@ -105,11 +119,17 @@ void on_key_press(rendering::render_window* window, int key, int scancode, int a
 void register_shaders(utils::registry<rendering::shader_program>& shader_registry) {
 	shader_registry.insert("overlay_shader", std::move(load_shader_program("../res/shaders/vertex_shaders/overlay_texture_shader.vs",
 																   "../res/shaders/fragment_shaders/overlay_texture_shader.fs")));
+	shader_registry.insert("font_shader", std::move(load_shader_program("../res/shaders/vertex_shaders/font_shader.vs",
+																   "../res/shaders/fragment_shaders/font_shader.fs")));
 }
 
 void register_textures(utils::registry<rendering::texture>& texture_registry) {
 	texture_registry.insert("example_texture", std::move(rendering::texture::load_from_file("../res/textures/test.png",
 														 GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_REPEAT, GL_RGB)));
+}
+
+void register_fonts(utils::registry<rendering::font>& font_registry) {
+	font_registry.insert("example_font", std::move(rendering::font::load_from_file("../res/fonts/tourney_black.ttf", 64)));
 }
 
 rendering::shader load_shader(const std::string& path, GLenum type) {

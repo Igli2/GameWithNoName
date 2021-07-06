@@ -5,18 +5,24 @@
 
 using namespace rendering;
 
+buffer::buffer() : type{} {
+    glGenBuffers(1, &this->id);
+}
+
 buffer::buffer(buffer&& other) {
     this->delete_data();
     this->id = other.release();
     this->type = other.type;
 }
 
-/*unsigned int buffer::get() {
-    return this->id;
-}*/
-
 void buffer::bind() {
     glBindBuffer(this->type, this->id);
+}
+
+void buffer::set(const size_t start, const size_t size, const void* data) {
+    this->bind();
+    glBufferSubData(GL_ARRAY_BUFFER, start, size, data);
+    glBindBuffer(this->type, 0);
 }
 
 bool buffer::empty() {
@@ -56,11 +62,6 @@ buffer buffer::create(const size_t data_size, const void* data, const GLenum typ
     glBindBuffer(type, 0);
 
     return b;
-}
-
-//private
-buffer::buffer() : id{0}, type{} {
-    glGenBuffers(1, &this->id);
 }
 
 void buffer::delete_data() {
