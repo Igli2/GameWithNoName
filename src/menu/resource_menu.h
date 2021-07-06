@@ -30,6 +30,7 @@ class ResourceMenu {
     private:
         const float MARGIN_LEFT_RIGHT = 100;
 
+        bool visible;
         int scroll;
         std::vector<ResourceEntry> resource_entries;
         rendering::mesh background;
@@ -38,10 +39,11 @@ class ResourceMenu {
         void createBackground(const int width, const int height);
     public:
         ResourceMenu(const int width, const int height);
-        // add resources
         void addResources(Resource resource, unsigned int amount);
         // remove resources, returns false if you don't have enough, returns true on success
         bool removeResources(Resource resource, unsigned int amount);
-        // called when window is resized, needed to draw dynamic menu
+        bool hasResource(Resource resource, unsigned int amount);
+        void open();
+        void close();
         void render();
 };

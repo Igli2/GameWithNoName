@@ -22,5 +22,6 @@ class game_window : public rendering::render_window {
 		void render_widgets();
 		// checks all button widgets if they were pressed / released
 		void on_mouse_button_press(rendering::render_window* window, int button, int action, int mods);
+		void on_key_press(rendering::render_window* window, int key, int scancode, int action, int mods);
         ~game_window();
 };
