@@ -37,8 +37,17 @@ texture texture::load_from_file(const std::string& filepath, const GLint min_fil
 
     if(!data) throw std::runtime_error("Unable to open image!");
 
-    texture tex{};
+    texture tex = texture::load(data, width, height, min_filter, mag_filter, tex_wrap_s, tex_wrap_t, format);
+    
+    stbi_image_free(data);
 
+    return tex;
+}
+
+texture texture::load(const void* data, const size_t width, const size_t height, const GLint min_filter, const GLint mag_filter,
+                                const GLint tex_wrap_s, const GLint tex_wrap_t, const GLint format) {
+    texture tex{};
+    
     glGenTextures(1, &tex.id);
     glBindTexture(GL_TEXTURE_2D, tex.id);
 
@@ -49,8 +58,8 @@ texture texture::load_from_file(const std::string& filepath, const GLint min_fil
 
     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
-    
-    stbi_image_free(data);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     return tex;
 }
