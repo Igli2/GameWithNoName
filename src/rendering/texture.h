@@ -12,8 +12,8 @@ namespace rendering {
         public:
             texture();
             texture(texture&& other);
-            void use();
             texture(const texture& other) = delete;
+            void use();
             ~texture();
 
             texture& operator=(texture&& other);

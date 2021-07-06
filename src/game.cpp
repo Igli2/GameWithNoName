@@ -11,6 +11,7 @@
 #include "rendering/shader.h"
 #include "rendering/texture.h"
 #include "rendering/shader_constants.h"
+#include "rendering/font.h"
 
 #include "utils/registry.h"
 
@@ -68,6 +69,8 @@ int main() {
 	rendering::mesh rect = rendering::mesh::create_with_texture_and_color(GL_STATIC_DRAW, 2, vertices, indices, tex_coords, vertices_color);
 	rect.set_texture_usage(false);
 
+//	rendering::font f = rendering::font::load_from_file("../res/fonts/tourney_black.ttf", 10);
+
 	shader_registry.get("overlay_shader").use();
 	glUniform2f(shader_const::WINDOW_BOUNDS_LOCATION, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
 
@@ -78,7 +81,7 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		texture_registry.get("example_texture").use();
-		rect.draw(position{100.0, 200.0, 0.0});
+		rect.draw(vec3<float>{100.0, 200.0, 0.0});
 
 		window.render_widgets();
 
