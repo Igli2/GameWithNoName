@@ -85,10 +85,8 @@ void font::draw_string(const std::string& str, const float scale, const vec4<flo
 
         char_data.char_texture.use();
 
-        this->rect_vert.bind();
-        glBufferSubData(GL_ARRAY_BUFFER, 0, rect_bounds.size() * sizeof(float), &rect_bounds[0]);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+        this->rect_vert.set(0, rect_bounds.size() * sizeof(float), &rect_bounds[0]);
+        
         glDrawElements(GL_TRIANGLES, RECT_INDICES.size(), GL_UNSIGNED_INT, nullptr);
 
         x_off += char_data.advance_offset.x * scale;

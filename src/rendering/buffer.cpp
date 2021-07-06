@@ -15,12 +15,14 @@ buffer::buffer(buffer&& other) {
     this->type = other.type;
 }
 
-/*unsigned int buffer::get() {
-    return this->id;
-}*/
-
 void buffer::bind() {
     glBindBuffer(this->type, this->id);
+}
+
+void buffer::set(const size_t start, const size_t size, const void* data) {
+    this->bind();
+    glBufferSubData(GL_ARRAY_BUFFER, start, size, data);
+    glBindBuffer(this->type, 0);
 }
 
 bool buffer::empty() {

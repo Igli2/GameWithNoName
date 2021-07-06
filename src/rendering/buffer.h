@@ -17,9 +17,9 @@ namespace rendering {
             buffer(const buffer& other) = delete;
             buffer(buffer&& other);
             void bind();
+            void set(const size_t start, const size_t size, const void* data);
             bool empty();
             const GLenum get_type();
-            //unsigned int get();
             unsigned int release();
             ~buffer();
 

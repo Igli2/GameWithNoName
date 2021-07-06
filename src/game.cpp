@@ -20,6 +20,7 @@
 void on_mouse_button_press(rendering::render_window* window, int button, int action, int mods);
 void register_shaders(utils::registry<rendering::shader_program>& shader_registry);
 void register_textures(utils::registry<rendering::texture>& texture_registry);
+void register_fonts(utils::registry<rendering::font>& font_registry);
 rendering::shader load_shader(const std::string& path, GLenum type);
 rendering::shader_program load_shader_program(const std::string& vert_path, const std::string& frag_path);
 
@@ -64,12 +65,13 @@ int main() {
 	utils::registry<rendering::texture> texture_registry;
 	register_textures(texture_registry);
 
+	utils::registry<rendering::font> font_registry;
+	register_fonts(font_registry);
+
 	ev_handler.add_mouse_button_event(on_mouse_button_press);
 	
 	rendering::mesh rect = rendering::mesh::create_with_texture_and_color(GL_STATIC_DRAW, 2, vertices, indices, tex_coords, vertices_color);
 	rect.set_texture_usage(false);
-
-	rendering::font test_font = rendering::font::load_from_file("../res/fonts/tourney_black.ttf", 64);
 
 	shader_registry.get("overlay_shader").use();
 	glUniform2f(shader_const::WINDOW_BOUNDS_LOCATION, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
@@ -92,7 +94,7 @@ int main() {
 
 		shader_registry.get("font_shader").use();
 
-		test_font.draw_string("abcdefghijklmnopQRSTUVWXYZ0=)!127598123", 0.5f, vec4<float>{1.0f, 0.5f, 0.7f, 1.0f}, vec3<float>{0.0f, 50.0f, 0.0f});
+		font_registry.get("example_font").draw_string("Hello World!", 0.75f, vec4<float>{0.78f, 0.59f, 0.24f, 1.0f}, vec3<float>{0.0f, 50.0f, 0.0f});
 
     	window.update();
 	}
@@ -117,6 +119,10 @@ void register_shaders(utils::registry<rendering::shader_program>& shader_registr
 void register_textures(utils::registry<rendering::texture>& texture_registry) {
 	texture_registry.insert("example_texture", std::move(rendering::texture::load_from_file("../res/textures/test.png",
 														 GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_REPEAT, GL_RGB)));
+}
+
+void register_fonts(utils::registry<rendering::font>& font_registry) {
+	font_registry.insert("example_font", std::move(rendering::font::load_from_file("../res/fonts/tourney_black.ttf", 64)));
 }
 
 rendering::shader load_shader(const std::string& path, GLenum type) {
