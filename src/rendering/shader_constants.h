@@ -7,4 +7,5 @@ namespace shader_const {
     const size_t OFFSET_LOCATION = 1;
     const size_t USE_TEXTURE_LOCATION = 2;
     const size_t USE_COLOR_LOCATION = 3;
+    const size_t FONT_COLOR_LOCATION = 2;
 }

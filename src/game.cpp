@@ -69,9 +69,12 @@ int main() {
 	rendering::mesh rect = rendering::mesh::create_with_texture_and_color(GL_STATIC_DRAW, 2, vertices, indices, tex_coords, vertices_color);
 	rect.set_texture_usage(false);
 
-//	rendering::font f = rendering::font::load_from_file("../res/fonts/tourney_black.ttf", 10);
+	rendering::font test_font = rendering::font::load_from_file("../res/fonts/tourney_black.ttf", 64);
 
 	shader_registry.get("overlay_shader").use();
+	glUniform2f(shader_const::WINDOW_BOUNDS_LOCATION, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
+
+	shader_registry.get("font_shader").use();
 	glUniform2f(shader_const::WINDOW_BOUNDS_LOCATION, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
 
 	glEnable(GL_BLEND);
@@ -80,10 +83,16 @@ int main() {
 	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		shader_registry.get("overlay_shader").use();
+
 		texture_registry.get("example_texture").use();
-		rect.draw(vec3<float>{100.0, 200.0, 0.0});
+		rect.draw(vec3<float>{100.0f, 200.0f, 0.0f});
 
 		window.render_widgets();
+
+		shader_registry.get("font_shader").use();
+
+		test_font.draw_string("abcdefghijklmnopQRSTUVWXYZ0=)!127598123", 0.5f, vec4<float>{1.0f, 0.5f, 0.7f, 1.0f}, vec3<float>{0.0f, 50.0f, 0.0f});
 
     	window.update();
 	}
@@ -101,6 +110,8 @@ void on_mouse_button_press(rendering::render_window* window, int button, int act
 void register_shaders(utils::registry<rendering::shader_program>& shader_registry) {
 	shader_registry.insert("overlay_shader", std::move(load_shader_program("../res/shaders/vertex_shaders/overlay_texture_shader.vs",
 																   "../res/shaders/fragment_shaders/overlay_texture_shader.fs")));
+	shader_registry.insert("font_shader", std::move(load_shader_program("../res/shaders/vertex_shaders/font_shader.vs",
+																   "../res/shaders/fragment_shaders/font_shader.fs")));
 }
 
 void register_textures(utils::registry<rendering::texture>& texture_registry) {
