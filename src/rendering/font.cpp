@@ -70,21 +70,9 @@ void font::draw_string(const std::string& str, const float scale, const vec4<flo
     for(const char c : str) {
         character& char_data = this->character_textures[c];
         
-        float pos_x = x_off + char_data.bearing.x * scale;
-        float pos_y = -(float)char_data.bearing.y * scale;
-
-        float width = char_data.size.x * scale;
-        float height = char_data.size.y * scale;
-
-        std::vector<float> rect_bounds {{
-            pos_x, pos_y + height,
-            pos_x, pos_y,
-            pos_x + width, pos_y,
-            pos_x + width, pos_y + height
-        }};
+        std::vector<float> rect_bounds = font::get_rect_bounds(char_data, x_off, scale);
 
         char_data.char_texture.use();
-
         this->rect_vert.set(0, rect_bounds.size() * sizeof(float), &rect_bounds[0]);
         
         glDrawElements(GL_TRIANGLES, RECT_INDICES.size(), GL_UNSIGNED_INT, nullptr);
@@ -103,6 +91,7 @@ font& font::operator=(font&& other) {
     this->character_textures = std::move(other.character_textures);
     this->rect_vert = std::move(other.rect_vert);
     this->rect_tex_coords = std::move(other.rect_tex_coords);
+    this->rect_ind = std::move(other.rect_ind);
     this->rect_vao = std::move(other.rect_vao);
 
     return *this;
@@ -130,4 +119,20 @@ font font::load_from_file(const std::string& filepath, const size_t font_size, c
     FT_Done_FreeType(ft_lib);
 
     return f;
+}
+
+//private
+std::vector<float> font::get_rect_bounds(const character& char_data, const float x_off, const float scale) {
+    float pos_x = x_off + char_data.bearing.x * scale;
+    float pos_y = -(float)char_data.bearing.y * scale;
+
+    float width = char_data.size.x * scale;
+    float height = char_data.size.y * scale;
+
+    return std::vector<float>{
+        pos_x, pos_y + height,
+        pos_x, pos_y,
+        pos_x + width, pos_y,
+        pos_x + width, pos_y + height
+    };
 }

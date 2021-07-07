@@ -27,6 +27,8 @@ namespace rendering {
             buffer rect_vert;
             buffer rect_tex_coords;
             buffer rect_ind;
+
+            static std::vector<float> get_rect_bounds(const character& char_data, const float x_off, const float scale);
         public:
             font();
             font(font&& other);
