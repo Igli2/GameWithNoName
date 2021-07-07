@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "game_window.h"
 
 game_window::game_window(const std::string& title, const size_t width, const size_t height, const bool resizable, event::event_handler& ev_handler)
@@ -40,6 +42,15 @@ void game_window::on_mouse_button_press(rendering::render_window* window, int bu
             for (Button& b : this->widgets) {
                 b.on_mouse_release();
             }
+        }
+    }
+}
+
+void game_window::on_key_press(rendering::render_window* window, int key, int scancode, int action, int mods) {
+    // std::cout << "REEEE" << std::endl;
+    if (action == GLFW_PRESS) {
+        if (key == GLFW_KEY_R) {
+            this->resource_menu.open();
         }
     }
 }

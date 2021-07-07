@@ -14,7 +14,14 @@ ResourceEntry::ResourceEntry(float x, float y, float width, float height)
             1, 2, 3
         }};
 
-        this->background = std::move(rendering::mesh::create(GL_STATIC_DRAW, 2, vertices, indices));
+        std::vector<float> color{{
+            0.7, 0.7, 0.7, 0.4,
+            0.7, 0.7, 0.7, 0.4,
+            0.7, 0.7, 0.7, 0.4,
+            0.7, 0.7, 0.7, 0.4
+        }};
+
+        this->background = std::move(rendering::mesh::create_with_color(GL_STATIC_DRAW, 2, vertices, indices, color));
 }
 
 void ResourceEntry::render() {
@@ -23,7 +30,7 @@ void ResourceEntry::render() {
 
 
 
-ResourceMenu::ResourceMenu(const int width, const int height): resource_entries{}, scroll{0} {
+ResourceMenu::ResourceMenu(const int width, const int height): resource_entries{}, scroll{0}, visible{false} {
     int index = 0;
     for (int resource_int = Resource::BEECH_LOG; resource_int != Resource::MAX; resource_int++) {
         Resource resource = static_cast<Resource>(resource_int);
@@ -61,6 +68,18 @@ bool ResourceMenu::removeResources(Resource resource, unsigned int amount) {
     return false;
 }
 
+bool ResourceMenu::hasResource(Resource resource, unsigned int amount) {
+    for (ResourceEntry& r_entry : this->resource_entries) {
+        if (r_entry.resource == resource) {
+            if (r_entry.resource_count >= amount) {
+                return true;
+            }
+            break;
+        }
+    }
+    return false;
+}
+
 void ResourceMenu::createBackground(const int width, const int height) {
     float w = static_cast<float>(width);
     float h = static_cast<float>(height);
@@ -77,21 +96,31 @@ void ResourceMenu::createBackground(const int width, const int height) {
         1, 2, 3
     }};
 
-    std::vector<float> tex_coords{{
-		1.0f, 1.0f,
-		1.0f, 0.0f,
-		0.0f, 0.0f,
-		0.0f, 1.0f
-	}};
+        std::vector<float> color{{
+            0.7, 0.7, 0.7, 0.4,
+            0.7, 0.7, 0.7, 0.4,
+            0.7, 0.7, 0.7, 0.4,
+            0.7, 0.7, 0.7, 0.4
+        }};
 
-   this->background = std::move(rendering::mesh::create_with_texture(GL_STATIC_DRAW, 2, vertices, indices, tex_coords));
+   this->background = std::move(rendering::mesh::create_with_color(GL_STATIC_DRAW, 2, vertices, indices, color));
 }
 
 void ResourceMenu::render() {
-    this->background_texture.use();
-    this->background.draw();
+    if (this->visible) {
+        this->background_texture.use();
+        this->background.draw();
 
-    for (ResourceEntry& r_entry : this->resource_entries) {
-        r_entry.render();
+        for (ResourceEntry& r_entry : this->resource_entries) {
+            r_entry.render();
+        }
     }
+}
+
+void ResourceMenu::open() {
+    this->visible = true;
+}
+
+void ResourceMenu::close() {
+    this->visible = false;
 }
