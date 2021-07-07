@@ -62,12 +62,14 @@ int main() {
 
 	utils::registry<rendering::shader_program> shader_registry;
 	register_shaders(shader_registry);
+	window.set_shader_registry(&shader_registry);
 
 	utils::registry<rendering::texture> texture_registry;
 	register_textures(texture_registry);
 
 	utils::registry<rendering::font> font_registry;
 	register_fonts(font_registry);
+	window.set_font_registry(&font_registry);
 
 	ev_handler.add_mouse_button_event(on_mouse_button_press);
 	ev_handler.add_key_event(on_key_press);

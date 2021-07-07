@@ -50,9 +50,19 @@ void game_window::on_key_press(rendering::render_window* window, int key, int sc
     // std::cout << "REEEE" << std::endl;
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_R) {
-            this->resource_menu.open();
+            this->resource_menu.setVisible(!this->resource_menu.isVisible());
         }
     }
+}
+
+void game_window::set_shader_registry(utils::registry<rendering::shader_program>* shader_registry) {
+    this->shader_registry = shader_registry;
+    this->resource_menu.set_shader_registry(shader_registry);
+}
+
+void game_window::set_font_registry(utils::registry<rendering::font>* font_registry) {
+    this->font_registry = font_registry;
+    this->resource_menu.set_font_registry(font_registry);
 }
 
 game_window::~game_window() {

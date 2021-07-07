@@ -24,8 +24,13 @@ ResourceEntry::ResourceEntry(float x, float y, float width, float height)
         this->background = std::move(rendering::mesh::create_with_color(GL_STATIC_DRAW, 2, vertices, indices, color));
 }
 
-void ResourceEntry::render() {
+void ResourceEntry::render(utils::registry<rendering::shader_program>* shader_registry, utils::registry<rendering::font>* font_registry) {
+    shader_registry->get("overlay_shader").use();
     this->background.draw();
+
+    shader_registry->get("font_shader").use();
+    vec2<float> text_dimensions = font_registry->get("example_font").get_string_render_bounds("Resource name here " + std::to_string(this->resource_count), 0.5f);
+    font_registry->get("example_font").draw_string("Resource name here " + std::to_string(this->resource_count), 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}, vec3<float>{this->x + (this->width - text_dimensions.x) / 2, this->y + (this->height + text_dimensions.y) / 2});
 }
 
 
@@ -42,7 +47,6 @@ ResourceMenu::ResourceMenu(const int width, const int height): resource_entries{
         index += 1;
     }
 
-    this->background_texture = rendering::texture::load_from_file("../res/textures/menu_background.png", GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_REPEAT, GL_RGBA);
     this->createBackground(width, height);
 }
 
@@ -108,19 +112,26 @@ void ResourceMenu::createBackground(const int width, const int height) {
 
 void ResourceMenu::render() {
     if (this->visible) {
-        this->background_texture.use();
         this->background.draw();
 
         for (ResourceEntry& r_entry : this->resource_entries) {
-            r_entry.render();
+            r_entry.render(this->shader_registry, this->font_registry);
         }
     }
 }
 
-void ResourceMenu::open() {
-    this->visible = true;
+void ResourceMenu::setVisible(bool state) {
+    this->visible = state;
 }
 
-void ResourceMenu::close() {
-    this->visible = false;
+bool ResourceMenu::isVisible() {
+    return this->visible;
+}
+
+void ResourceMenu::set_shader_registry(utils::registry<rendering::shader_program>* shader_registry) {
+    this->shader_registry = shader_registry;
+}
+
+void ResourceMenu::set_font_registry(utils::registry<rendering::font>* font_registry) {
+    this->font_registry = font_registry;
 }
