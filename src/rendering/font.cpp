@@ -67,8 +67,8 @@ void font::draw_string(const std::string& str, const float scale, const vec4<flo
     this->rect_vao.bind();
 
     float x_off = 0;
-    for(const char c : str) {
-        character& char_data = this->character_textures[c];
+    for(const char to_draw : str) {
+        character& char_data = this->character_textures[to_draw];
         
         std::vector<float> rect_bounds = font::get_rect_bounds(char_data, x_off, scale);
 
@@ -82,6 +82,25 @@ void font::draw_string(const std::string& str, const float scale, const vec4<flo
 
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+vec2<float> font::get_string_render_bounds(const std::string& str, const float scale) {
+    vec2<float> bounds{};
+
+    for(size_t c = 0; c < str.size(); c++) {
+        const character& char_data = this->character_textures[str[c]];
+
+        float height = char_data.size.y * scale;
+        if(height > bounds.y) bounds.y = height;
+
+        if(c == str.size() - 1) {
+            bounds.x += char_data.size.x * scale;
+        } else {
+            bounds.x += char_data.advance_offset.x * scale;
+        }
+    }
+
+    return bounds;
 }
 
 font::~font() {

@@ -34,6 +34,7 @@ namespace rendering {
             font(font&& other);
             font(const font& other) = delete;
             void draw_string(const std::string& str, const float scale, const vec4<float>& color, const vec3<float>& draw_position = {});
+            vec2<float> get_string_render_bounds(const std::string& str, const float scale);
             ~font();
 
             font& operator=(const font& other) = delete;
