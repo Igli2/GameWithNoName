@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20.3)
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 14)
 
 project(GameWithNoName)
 
@@ -14,6 +14,7 @@ set(GLFW_INSTALL OFF CACHE BOOL "GLFW lib only")
 
 add_subdirectory(glad)
 add_subdirectory(glfw)
+add_subdirectory(json_library)
 
 set(SOURCE_FILES
     src/game_window.cpp
@@ -45,11 +46,15 @@ set(SOURCE_FILES
     src/utils/registry.h
 
     src/utils/registry.ipp
+
+    ${JSON_LIBRARY_FILES}
 )
 
 include_directories(includes/)
+include_directories(json_library/src/lib/)
 
 add_executable(game src/game.cpp ${SOURCE_FILES})
 
 target_link_libraries(game glad ${OPENGL_LIBRARIES} glfw)
 target_link_libraries(game ${FREETYPE_LIBRARIES})
+target_link_libraries(game json_lib)
