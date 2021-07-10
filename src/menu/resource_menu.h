@@ -2,6 +2,8 @@
 
 #include <map>
 
+#include "resource.h"
+
 #include "../rendering/mesh.h"
 #include "../rendering/texture.h"
 #include "../rendering/shader.h"
@@ -9,12 +11,6 @@
 
 #include "../utils/registry.h"
 
-enum Resource {
-    BEECH_LOG,
-    ANDESITE_ROCK,
-    BEECH_PLANK,
-    MAX
-};
 
 class ResourceEntry {
     public:
@@ -24,9 +20,10 @@ class ResourceEntry {
         float height;
         int resource_count;
         Resource resource;
+        std::string resource_name;
         rendering::mesh background;
 
-        ResourceEntry(float x, float y, float width, float height);
+        ResourceEntry(float x, float y, float width, float height, Resource resource);
         void render(utils::registry<rendering::shader_program>* shader_registry, utils::registry<rendering::font>* font_registry);
 };
 
