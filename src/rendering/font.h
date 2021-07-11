@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 #include <vector>
 #include <string>
 #include <cstddef>
@@ -33,7 +35,7 @@ namespace rendering {
             font();
             font(font&& other);
             font(const font& other) = delete;
-            void draw_string(const std::string& str, const float scale, const vec4<float>& color, const vec3<float>& draw_position = {});
+            void draw_string(const std::string& str, const float scale, const vec4<float>& color, const glm::mat4& transform = glm::mat4{1.0f});
             vec2<float> get_string_render_bounds(const std::string& str, const float scale);
             ~font();
 

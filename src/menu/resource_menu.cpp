@@ -50,11 +50,11 @@ void ResourceEntry::render(utils::registry<rendering::shader_program>* shader_re
 
     vec2<float> text_dimensions = font_registry->get("example_font").get_string_render_bounds(this->resource_name, 0.5f);
     vec3<float> text_pos = {this->x + (this->width - text_dimensions.x) / 2, this->y + (this->height + text_dimensions.y) / 2};
-    font_registry->get("example_font").draw_string(this->resource_name, 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}, text_pos);
+    font_registry->get("example_font").draw_string(this->resource_name, 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}); // removed position
 
     vec2<float> count_dimensions = font_registry->get("example_font").get_string_render_bounds(std::to_string(this->resource_count), 0.5f);
     vec3<float> count_pos = {this->x + this->width - count_dimensions.x - 20, this->y + (this->height + count_dimensions.y) / 2};
-    font_registry->get("example_font").draw_string(std::to_string(this->resource_count), 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}, count_pos);
+    font_registry->get("example_font").draw_string(std::to_string(this->resource_count), 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}); // removed position
 }
 
 

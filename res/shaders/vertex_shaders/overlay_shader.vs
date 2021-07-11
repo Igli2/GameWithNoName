@@ -8,14 +8,13 @@ layout (location = 2) in vec4 in_overlay_color;
 out vec2 tex_coord;
 out vec4 overlay_color;
 
-layout (location = 0) uniform vec2 window_bounds;
-layout (location = 1) uniform vec3 offset;
+layout (location = 0) uniform mat4 transform;
+layout (location = 1) uniform mat4 view;
+layout (location = 2) uniform mat4 projection;
 
 void main() {
-    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
-    gl_Position.x = (pos.x + offset.x) / window_bounds.x * 2 - 1;
-    gl_Position.y = 1 - (pos.y + offset.y) / window_bounds.y * 2;
-    
+    gl_Position = projection * view * transform * vec4(pos, 0.0, 1.0);
+  
     tex_coord = in_tex_coord;
     overlay_color = in_overlay_color;
 }

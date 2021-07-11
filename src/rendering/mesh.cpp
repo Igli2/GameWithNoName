@@ -1,5 +1,7 @@
 #include "mesh.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <utility>
 
 #include "shader_constants.h"
@@ -13,10 +15,10 @@ mesh::mesh(mesh&& other) {
     *this = std::move(other);
 }
 
-void mesh::draw(const vec3<float>& draw_position) {
+void mesh::draw(const glm::mat4& transform) {
     glUniform1i(shader_const::USE_TEXTURE_LOCATION, this->use_texture);
     glUniform1i(shader_const::USE_COLOR_LOCATION, this->use_color);
-    glUniform3f(shader_const::OFFSET_LOCATION, draw_position.x, draw_position.y, draw_position.z);
+    glUniformMatrix4fv(shader_const::TRANSFORM_MAT_LOCATION, 1, GL_FALSE, glm::value_ptr(transform));
 
     this->data.bind();
 

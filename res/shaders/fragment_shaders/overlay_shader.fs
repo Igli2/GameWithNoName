@@ -7,8 +7,8 @@ in vec4 overlay_color;
 out vec4 FragColor;
 
 uniform sampler2D in_tex;
-layout (location = 2) uniform bool use_texture;
-layout (location = 3) uniform bool use_color;
+layout (location = 4) uniform bool use_texture;
+layout (location = 5) uniform bool use_color;
 
 void main() {
 

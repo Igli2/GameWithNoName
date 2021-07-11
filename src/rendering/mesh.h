@@ -3,6 +3,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+
 #include <vector>
 #include <cstddef>
 
@@ -31,7 +33,7 @@ namespace rendering {
             mesh();
             mesh(mesh&& other);
             mesh(const mesh& other) = delete;
-            void draw(const vec3<float>& draw_position = {});
+            void draw(const glm::mat4& transform = glm::mat4{1.0f});
             void set_texture_usage(const bool state);
             void set_color_usage(const bool state);
             bool get_texture_usage();

@@ -1,3 +1,6 @@
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <fstream>
 #include <stdexcept>
 #include <vector>
@@ -12,6 +15,7 @@
 #include "rendering/texture.h"
 #include "rendering/shader_constants.h"
 #include "rendering/font.h"
+#include "rendering/camera.h"
 
 #include "utils/registry.h"
 
@@ -74,31 +78,50 @@ int main() {
 	ev_handler.add_mouse_button_event(on_mouse_button_press);
 	ev_handler.add_key_event(on_key_press);
 	
+	rendering::camera cam = rendering::camera{rendering::render_mode::RENDER_3D};
+	cam.set_2D_projection_matrix(glm::ortho(0.0f, (float)WINDOW_WIDTH, 0.0f, (float)WINDOW_HEIGHT));
+	cam.set_3D_projection_matrix(glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH/(float)WINDOW_HEIGHT, 0.1f, 100.0f));
+
+	glm::mat4 view{1.0f};
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	cam.set_view_matrix(view);
+
 	rendering::mesh rect = rendering::mesh::create_with_texture_and_color(GL_STATIC_DRAW, 2, vertices, indices, tex_coords, vertices_color);
 	rect.set_texture_usage(false);
 
-	shader_registry.get("overlay_shader").use();
-	glUniform2f(shader_const::WINDOW_BOUNDS_LOCATION, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
+	glm::mat4 rect_transform = glm::mat4(1.0f);
+	rect_transform = glm::scale(rect_transform, glm::vec3(0.005f, 0.004f, 0.005f));
+	rect_transform = glm::rotate(rect_transform, glm::radians(-55.0f), glm::vec3{1.0f, 0.0f, 0.0f}); 
 
-	shader_registry.get("font_shader").use();
-	glUniform2f(shader_const::WINDOW_BOUNDS_LOCATION, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
+	glm::mat4 font_transform = glm::mat4(1.0f);
+	font_transform = glm::translate(font_transform, glm::vec3{-1.0f, 0.0f, 0.0f});
+	font_transform = glm::scale(font_transform, glm::vec3(0.005f, 0.005f, 0.005f));
+	font_transform = glm::rotate(font_transform, glm::radians(65.0f), glm::vec3{0.0f, 1.0f, 0.0f}); 
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	while(window.is_open()) {
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shader_registry.get("overlay_shader").use();
-
+		
 		texture_registry.get("example_texture").use();
-		rect.draw(vec3<float>{100.0f, 200.0f, 0.0f});
 
-		window.render_widgets();
+		cam.set_render_mode(rendering::render_mode::RENDER_3D);
+		rect.draw(rect_transform);
 
 		shader_registry.get("font_shader").use();
+		cam.update_render_perspective();
 
-		font_registry.get("example_font").draw_string("Hello World!", 0.75f, vec4<float>{0.78f, 0.59f, 0.24f, 1.0f}, vec3<float>{0.0f, 50.0f, 0.0f});
+		font_registry.get("example_font").draw_string("Hello World!", 0.75f, vec4<float>{0.78f, 0.59f, 0.24f, 1.0f}, font_transform);
+
+		cam.set_render_mode(rendering::render_mode::RENDER_2D);
+
+		shader_registry.get("overlay_shader").use();
+		cam.update_render_perspective();
+
+		window.render_widgets();
 
     	window.update();
 	}
@@ -119,8 +142,8 @@ void on_key_press(rendering::render_window* window, int key, int scancode, int a
 }
 
 void register_shaders(utils::registry<rendering::shader_program>& shader_registry) {
-	shader_registry.insert("overlay_shader", std::move(load_shader_program("../res/shaders/vertex_shaders/overlay_texture_shader.vs",
-																   "../res/shaders/fragment_shaders/overlay_texture_shader.fs")));
+	shader_registry.insert("overlay_shader", std::move(load_shader_program("../res/shaders/vertex_shaders/overlay_shader.vs",
+																   "../res/shaders/fragment_shaders/overlay_shader.fs")));
 	shader_registry.insert("font_shader", std::move(load_shader_program("../res/shaders/vertex_shaders/font_shader.vs",
 																   "../res/shaders/fragment_shaders/font_shader.fs")));
 }

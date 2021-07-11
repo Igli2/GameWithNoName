@@ -3,6 +3,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <utility>
 #include <stdexcept>
 #include <freetype2/ft2build.h>
@@ -13,10 +15,10 @@
 using namespace rendering;
 
 const std::vector<float> TEXTURE_COORDS {{
-    0.0f, 1.0f,
     0.0f, 0.0f,
-    1.0f, 0.0f,
-    1.0f, 1.0f
+    0.0f, 1.0f,
+    1.0f, 1.0f,
+    1.0f, 0.0f
 }};
 
 const std::vector<unsigned int> RECT_INDICES {{
@@ -60,9 +62,9 @@ font::font(font&& other) {
     *this = std::move(other);
 }
 
-void font::draw_string(const std::string& str, const float scale, const vec4<float>& color, const vec3<float>& draw_position) {
+void font::draw_string(const std::string& str, const float scale, const vec4<float>& color, const glm::mat4& transform) {
     glUniform4f(shader_const::FONT_COLOR_LOCATION, color.x, color.y, color.z, color.w);
-    glUniform3f(shader_const::OFFSET_LOCATION, draw_position.x, draw_position.y, draw_position.z);
+    glUniformMatrix4fv(shader_const::TRANSFORM_MAT_LOCATION, 1, GL_FALSE, glm::value_ptr(transform));
 
     this->rect_vao.bind();
 
@@ -142,11 +144,11 @@ font font::load_from_file(const std::string& filepath, const size_t font_size, c
 
 //private
 std::vector<float> font::get_rect_bounds(const character& char_data, const float x_off, const float scale) {
-    float pos_x = x_off + char_data.bearing.x * scale;
-    float pos_y = -(float)char_data.bearing.y * scale;
-
     float width = char_data.size.x * scale;
     float height = char_data.size.y * scale;
+
+    float pos_x = x_off + char_data.bearing.x * scale;
+    float pos_y = char_data.bearing.y * scale - height;
 
     return std::vector<float>{
         pos_x, pos_y + height,
