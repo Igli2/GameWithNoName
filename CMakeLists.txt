@@ -53,6 +53,7 @@ set(SOURCE_FILES
 
 include_directories(includes/)
 include_directories(json_library/src/lib/)
+include_directories(glm/)
 
 add_executable(game src/game.cpp ${SOURCE_FILES})
 

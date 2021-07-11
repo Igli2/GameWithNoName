@@ -7,3 +7,6 @@
 [submodule "json_library"]
 	path = json_library
 	url = https://github.com/Creepsy/json_library
+[submodule "glm"]
+	path = glm
+	url = https://github.com/g-truc/glm.git
