@@ -1,5 +1,8 @@
 #include "resource_menu.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <json.h>
 #include <json_reader.h>
 
@@ -50,12 +53,14 @@ void ResourceEntry::render(utils::registry<rendering::shader_program>* shader_re
     shader_registry->get("font_shader").use();
 
     vec2<float> text_dimensions = font_registry->get("example_font").get_string_render_bounds(this->resource_name, 0.5f);
-    vec3<float> text_pos = {this->x + (this->width - text_dimensions.x) / 2, this->y + (this->height + text_dimensions.y) / 2};
-    font_registry->get("example_font").draw_string(this->resource_name, 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}); // removed position
+    glm::mat4 text_pos{1.0f};
+    text_pos = glm::translate(text_pos, glm::vec3{this->x + (this->width - text_dimensions.x) / 2, this->y + (this->height + text_dimensions.y) / 2, 0.0f});
+    font_registry->get("example_font").draw_string(this->resource_name, 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}, text_pos);
 
     vec2<float> count_dimensions = font_registry->get("example_font").get_string_render_bounds(std::to_string(this->resource_count), 0.5f);
-    vec3<float> count_pos = {this->x + this->width - count_dimensions.x - 20, this->y + (this->height + count_dimensions.y) / 2};
-    font_registry->get("example_font").draw_string(std::to_string(this->resource_count), 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}); // removed position
+    glm::mat4 count_pos{1.0f};
+    count_pos = glm::translate(count_pos, glm::vec3{this->x + this->width - count_dimensions.x - 20, this->y + (this->height + count_dimensions.y) / 2, 0.0f});
+    font_registry->get("example_font").draw_string(std::to_string(this->resource_count), 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}, count_pos);
 }
 
 
