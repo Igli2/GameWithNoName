@@ -24,7 +24,7 @@ class ResourceEntry {
         rendering::mesh background;
 
         ResourceEntry(float x, float y, float width, float height, Resource resource);
-        void render(utils::registry<rendering::shader_program>* shader_registry, utils::registry<rendering::font>* font_registry);
+        void render(utils::registry<rendering::shader_program>* shader_registry, utils::registry<rendering::font>* font_registry, int scroll_offset);
 };
 
 class ResourceMenu {
@@ -50,4 +50,5 @@ class ResourceMenu {
 		void set_shader_registry(utils::registry<rendering::shader_program>* shader_registry);
 		void set_font_registry(utils::registry<rendering::font>* font_registry);
         void render();
+        void on_scroll(double offset);
 };

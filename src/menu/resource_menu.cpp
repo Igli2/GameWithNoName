@@ -42,7 +42,8 @@ ResourceEntry::ResourceEntry(float x, float y, float width, float height, Resour
         file.close();
 }
 
-void ResourceEntry::render(utils::registry<rendering::shader_program>* shader_registry, utils::registry<rendering::font>* font_registry) {
+void ResourceEntry::render(utils::registry<rendering::shader_program>* shader_registry, utils::registry<rendering::font>* font_registry, int scroll_offset) {
+    // TODO: scroll offset for background
     shader_registry->get("overlay_shader").use();
     this->background.draw();
 
@@ -138,7 +139,7 @@ void ResourceMenu::render() {
         this->background.draw();
 
         for (ResourceEntry& r_entry : this->resource_entries) {
-            r_entry.render(this->shader_registry, this->font_registry);
+            r_entry.render(this->shader_registry, this->font_registry, this->scroll);
         }
     }
 }
@@ -157,4 +158,8 @@ void ResourceMenu::set_shader_registry(utils::registry<rendering::shader_program
 
 void ResourceMenu::set_font_registry(utils::registry<rendering::font>* font_registry) {
     this->font_registry = font_registry;
+}
+
+void ResourceMenu::on_scroll(double offset) {
+    this->scroll += offset * 5;
 }

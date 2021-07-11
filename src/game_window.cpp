@@ -55,6 +55,10 @@ void game_window::on_key_press(rendering::render_window* window, int key, int sc
     }
 }
 
+void game_window::on_scroll(rendering::render_window* window, double xoffset, double yoffset) {
+    this->resource_menu.on_scroll(yoffset);
+}
+
 void game_window::set_shader_registry(utils::registry<rendering::shader_program>* shader_registry) {
     this->shader_registry = shader_registry;
     this->resource_menu.set_shader_registry(shader_registry);
