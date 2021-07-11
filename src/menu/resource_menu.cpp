@@ -42,18 +42,19 @@ ResourceEntry::ResourceEntry(float x, float y, float width, float height, Resour
         file.close();
 }
 
-void ResourceEntry::render(utils::registry<rendering::shader_program>* shader_registry, utils::registry<rendering::font>* font_registry) {
+void ResourceEntry::render(utils::registry<rendering::shader_program>* shader_registry, utils::registry<rendering::font>* font_registry, int scroll_offset) {
+    // TODO: scroll offset for background
     shader_registry->get("overlay_shader").use();
     this->background.draw();
 
     shader_registry->get("font_shader").use();
 
     vec2<float> text_dimensions = font_registry->get("example_font").get_string_render_bounds(this->resource_name, 0.5f);
-    vec3<float> text_pos = {this->x + (this->width - text_dimensions.x) / 2, this->y + (this->height + text_dimensions.y) / 2};
+    vec3<float> text_pos = {this->x + (this->width - text_dimensions.x) / 2, this->y + (this->height + text_dimensions.y) / 2 + scroll_offset};
     font_registry->get("example_font").draw_string(this->resource_name, 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}, text_pos);
 
     vec2<float> count_dimensions = font_registry->get("example_font").get_string_render_bounds(std::to_string(this->resource_count), 0.5f);
-    vec3<float> count_pos = {this->x + this->width - count_dimensions.x - 20, this->y + (this->height + count_dimensions.y) / 2};
+    vec3<float> count_pos = {this->x + this->width - count_dimensions.x - 20, this->y + (this->height + count_dimensions.y) / 2 + scroll_offset};
     font_registry->get("example_font").draw_string(std::to_string(this->resource_count), 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}, count_pos);
 }
 
@@ -138,7 +139,7 @@ void ResourceMenu::render() {
         this->background.draw();
 
         for (ResourceEntry& r_entry : this->resource_entries) {
-            r_entry.render(this->shader_registry, this->font_registry);
+            r_entry.render(this->shader_registry, this->font_registry, this->scroll);
         }
     }
 }
@@ -157,4 +158,8 @@ void ResourceMenu::set_shader_registry(utils::registry<rendering::shader_program
 
 void ResourceMenu::set_font_registry(utils::registry<rendering::font>* font_registry) {
     this->font_registry = font_registry;
+}
+
+void ResourceMenu::on_scroll(double offset) {
+    this->scroll += offset * 5;
 }

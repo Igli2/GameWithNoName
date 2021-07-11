@@ -19,6 +19,7 @@
 
 void on_mouse_button_press(rendering::render_window* window, int button, int action, int mods);
 void on_key_press(rendering::render_window* window, int key, int scancode, int action, int mods);
+void on_scroll(rendering::render_window* window, double xoffset, double yoffset);
 void register_shaders(utils::registry<rendering::shader_program>& shader_registry);
 void register_textures(utils::registry<rendering::texture>& texture_registry);
 void register_fonts(utils::registry<rendering::font>& font_registry);
@@ -73,6 +74,7 @@ int main() {
 
 	ev_handler.add_mouse_button_event(on_mouse_button_press);
 	ev_handler.add_key_event(on_key_press);
+	ev_handler.add_scroll_event(on_scroll);
 	
 	rendering::mesh rect = rendering::mesh::create_with_texture_and_color(GL_STATIC_DRAW, 2, vertices, indices, tex_coords, vertices_color);
 	rect.set_texture_usage(false);
@@ -116,6 +118,11 @@ void on_mouse_button_press(rendering::render_window* window, int button, int act
 void on_key_press(rendering::render_window* window, int key, int scancode, int action, int mods) {
 	game_window* w = (game_window*) window;
 	w->on_key_press(w, key, scancode, action, mods);
+}
+
+void on_scroll(rendering::render_window* window, double xoffset, double yoffset) {
+	game_window* w = (game_window*) window;
+	w->on_scroll(w, xoffset, yoffset);
 }
 
 void register_shaders(utils::registry<rendering::shader_program>& shader_registry) {

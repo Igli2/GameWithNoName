@@ -29,6 +29,7 @@ class game_window : public rendering::render_window {
 		// checks all button widgets if they were pressed / released
 		void on_mouse_button_press(rendering::render_window* window, int button, int action, int mods);
 		void on_key_press(rendering::render_window* window, int key, int scancode, int action, int mods);
+		void on_scroll(rendering::render_window* window, double xoffset, double yoffset);
 		void set_shader_registry(utils::registry<rendering::shader_program>* shader_registry);
 		void set_font_registry(utils::registry<rendering::font>* font_registry);
         ~game_window();
