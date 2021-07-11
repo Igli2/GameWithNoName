@@ -11,27 +11,6 @@
 
 ResourceEntry::ResourceEntry(float x, float y, float width, float height, Resource resource)
     : x{x}, y{y}, width{width}, height{height}, resource_count{0}, resource{resource} {
-        std::vector<float> vertices{{
-            x, y,
-            x + width, y,
-            x, y + height,
-            x + width, y + height
-        }};
-
-        std::vector<unsigned int> indices{{
-            0, 1, 2,
-            1, 2, 3
-        }};
-
-        std::vector<float> color{{
-            0.7, 0.7, 0.7, 0.4,
-            0.7, 0.7, 0.7, 0.4,
-            0.7, 0.7, 0.7, 0.4,
-            0.7, 0.7, 0.7, 0.4
-        }};
-
-        this->background = std::move(rendering::mesh::create_with_color(GL_STATIC_DRAW, 2, vertices, indices, color));
-
         // load resource properties
         std::string filename = resource_files[resource];
         std::ifstream file;
@@ -46,34 +25,30 @@ ResourceEntry::ResourceEntry(float x, float y, float width, float height, Resour
 }
 
 void ResourceEntry::render(utils::registry<rendering::shader_program>* shader_registry, utils::registry<rendering::font>* font_registry, int scroll_offset) {
-    // TODO: scroll offset for background
-    shader_registry->get("overlay_shader").use();
-    this->background.draw();
-
     shader_registry->get("font_shader").use();
 
     vec2<float> text_dimensions = font_registry->get("example_font").get_string_render_bounds(this->resource_name, 0.5f);
     glm::mat4 text_pos{1.0f};
-    text_pos = glm::translate(text_pos, glm::vec3{this->x + (this->width - text_dimensions.x) / 2, this->y + (this->height + text_dimensions.y) / 2 - scroll_offset, 0.0f});
+    text_pos = glm::translate(text_pos, glm::vec3{this->x + (this->width - text_dimensions.x) / 2, this->y + (this->height - text_dimensions.y) / 2 - scroll_offset, 0.0f});
     font_registry->get("example_font").draw_string(this->resource_name, 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}, text_pos);
 
     vec2<float> count_dimensions = font_registry->get("example_font").get_string_render_bounds(std::to_string(this->resource_count), 0.5f);
     glm::mat4 count_pos{1.0f};
-    count_pos = glm::translate(count_pos, glm::vec3{this->x + this->width - count_dimensions.x - 20, this->y + (this->height + count_dimensions.y) / 2 - scroll_offset, 0.0f});
+    count_pos = glm::translate(count_pos, glm::vec3{this->x + this->width - count_dimensions.x - 20, this->y + (this->height - count_dimensions.y) / 2 - scroll_offset, 0.0f});
     font_registry->get("example_font").draw_string(std::to_string(this->resource_count), 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}, count_pos);
 }
 
 
 
 ResourceMenu::ResourceMenu(const int width, const int height): resource_entries{}, scroll{0}, visible{false} {
-    int index = 0;
+    unsigned int i = 0;
     for (int resource_int = Resource::BEECH_LOG; resource_int != Resource::MAX; resource_int++) {
         Resource resource = static_cast<Resource>(resource_int);
 
-        ResourceEntry entry{120, 100 * (float)index + 20, (float)width - 240, 80, resource};
+        ResourceEntry entry{120, 100 * (float)i + 20, (float)width - 240, 80, resource};
         this->resource_entries.push_back(std::move(entry));
 
-        index += 1;
+        i += 1;
     }
 
     this->createBackground(width, height);
@@ -124,19 +99,27 @@ void ResourceMenu::createBackground(const int width, const int height) {
         w - this->MARGIN_LEFT_RIGHT, h
     }};
 
+    std::vector<float> entry_vertices{{
+        0.0f, 0.0f,
+        width - 240.0f, 0.0f,
+        0.0f, 80.0f,
+        width - 240.0f, 80.0f
+    }};
+
     std::vector<unsigned int> indices{{
         0, 1, 2,
         1, 2, 3
     }};
 
         std::vector<float> color{{
-            0.7, 0.7, 0.7, 0.4,
-            0.7, 0.7, 0.7, 0.4,
-            0.7, 0.7, 0.7, 0.4,
-            0.7, 0.7, 0.7, 0.4
+            0.85, 0.7, 0.7, 0.4,
+            0.7, 0.85, 0.7, 0.4,
+            0.7, 0.7, 0.85, 0.4,
+            0.85, 0.85, 0.7, 0.4
         }};
 
    this->background = std::move(rendering::mesh::create_with_color(GL_STATIC_DRAW, 2, vertices, indices, color));
+   this->entry_background = std::move(rendering::mesh::create_with_color(GL_STATIC_DRAW, 2, entry_vertices, indices, color));
 }
 
 void ResourceMenu::render() {
@@ -144,6 +127,12 @@ void ResourceMenu::render() {
         this->background.draw();
 
         for (ResourceEntry& r_entry : this->resource_entries) {
+            shader_registry->get("overlay_shader").use();
+
+            glm::mat4 offset{1.0f};
+            offset = glm::translate(offset, glm::vec3{r_entry.x, r_entry.y - this->scroll, 0.0f});
+            this->entry_background.draw(offset);
+
             r_entry.render(this->shader_registry, this->font_registry, this->scroll);
         }
     }

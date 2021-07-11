@@ -111,12 +111,12 @@ int main() {
 		texture_registry.get("example_texture").use();
 
 		cam.set_render_mode(rendering::render_mode::RENDER_3D);
-		rect.draw(rect_transform);
+		// rect.draw(rect_transform);
 
 		shader_registry.get("font_shader").use();
 		cam.update_render_perspective();
 
-		font_registry.get("example_font").draw_string("Hello World!", 0.75f, vec4<float>{0.78f, 0.59f, 0.24f, 1.0f}, font_transform);
+		// font_registry.get("example_font").draw_string("Hello World!", 0.75f, vec4<float>{0.78f, 0.59f, 0.24f, 1.0f}, font_transform);
 
 		cam.set_render_mode(rendering::render_mode::RENDER_2D);
 
