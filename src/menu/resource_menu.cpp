@@ -20,6 +20,30 @@ ResourceEntry::ResourceEntry(float x, float y, float width, float height, Resour
 
         json::json_object obj = json::json_reader::next_object_from_stream(file);
         this->resource_name = obj.get_map()["name"].get_string();
+        std::string icon_file = obj.get_map()["icon_file"].get_string();
+
+        // load icon texture & mesh
+        std::vector<float> vertices{{
+            0, 0,
+            40, 0,
+            0, 40,
+            40, 40
+        }};
+
+        std::vector<unsigned int> indices{{
+            0, 1, 2,
+            1, 2, 3
+        }};
+
+        std::vector<float> tex_coords{{
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            0.0f, 0.0f,
+            1.0f, 0.0f
+        }};
+
+        this->icon_mesh = std::move(rendering::mesh::create_with_texture(GL_STATIC_DRAW, 2, vertices, indices, tex_coords));
+        this->icon = std::move(rendering::texture::load_from_file("../res/textures/" + icon_file, GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT, GL_RGBA));
 
         file.close();
 }
@@ -36,6 +60,12 @@ void ResourceEntry::render(utils::registry<rendering::shader_program>* shader_re
     glm::mat4 count_pos{1.0f};
     count_pos = glm::translate(count_pos, glm::vec3{this->x + this->width - count_dimensions.x - 20, this->y + (this->height - count_dimensions.y) / 2 - scroll_offset, 0.0f});
     font_registry->get("example_font").draw_string(std::to_string(this->resource_count), 0.5f, vec4<float>{0.78f, 0.29f, 0.44f, 1.0f}, count_pos);
+
+    shader_registry->get("overlay_shader").use();
+    this->icon.use();
+    glm::mat4 icon_pos{1.0f};
+    icon_pos = glm::translate(icon_pos, glm::vec3{this->x + 20, this->y + 20 - scroll_offset, 0.0f});
+    this->icon_mesh.draw(icon_pos);
 }
 
 
@@ -93,10 +123,10 @@ void ResourceMenu::createBackground(const int width, const int height) {
     float h = static_cast<float>(height);
 
     std::vector<float> vertices{{
-        this->MARGIN_LEFT_RIGHT, 0,
-        w - this->MARGIN_LEFT_RIGHT, 0,
-        this->MARGIN_LEFT_RIGHT, h,
-        w - this->MARGIN_LEFT_RIGHT, h
+        ResourceMenu::MARGIN_LEFT_RIGHT, 0,
+        w - ResourceMenu::MARGIN_LEFT_RIGHT, 0,
+        ResourceMenu::MARGIN_LEFT_RIGHT, h,
+        w - ResourceMenu::MARGIN_LEFT_RIGHT, h
     }};
 
     std::vector<float> entry_vertices{{
@@ -111,12 +141,12 @@ void ResourceMenu::createBackground(const int width, const int height) {
         1, 2, 3
     }};
 
-        std::vector<float> color{{
-            0.85, 0.7, 0.7, 0.4,
-            0.7, 0.85, 0.7, 0.4,
-            0.7, 0.7, 0.85, 0.4,
-            0.85, 0.85, 0.7, 0.4
-        }};
+    std::vector<float> color{{
+        0.85, 0.7, 0.7, 0.4,
+        0.7, 0.85, 0.7, 0.4,
+        0.7, 0.7, 0.85, 0.4,
+        0.85, 0.85, 0.7, 0.4
+    }};
 
    this->background = std::move(rendering::mesh::create_with_color(GL_STATIC_DRAW, 2, vertices, indices, color));
    this->entry_background = std::move(rendering::mesh::create_with_color(GL_STATIC_DRAW, 2, entry_vertices, indices, color));
@@ -155,5 +185,5 @@ void ResourceMenu::set_font_registry(utils::registry<rendering::font>* font_regi
 }
 
 void ResourceMenu::on_scroll(double offset) {
-    this->scroll += offset * 5;
+    this->scroll += offset * ResourceMenu::SCROLL_SPEED;
 }

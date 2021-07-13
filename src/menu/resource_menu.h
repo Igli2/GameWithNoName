@@ -21,6 +21,8 @@ class ResourceEntry {
         int resource_count;
         Resource resource;
         std::string resource_name;
+        rendering::texture icon;
+        rendering::mesh icon_mesh;
 
         ResourceEntry(float x, float y, float width, float height, Resource resource);
         void render(utils::registry<rendering::shader_program>* shader_registry, utils::registry<rendering::font>* font_registry, int scroll_offset);
@@ -29,6 +31,7 @@ class ResourceEntry {
 class ResourceMenu {
     private:
         const float MARGIN_LEFT_RIGHT = 100;
+        const float SCROLL_SPEED = 10;
 
         bool visible;
         int scroll;
