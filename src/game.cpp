@@ -80,7 +80,7 @@ int main() {
 	ev_handler.add_key_event(on_key_press);
 	ev_handler.add_scroll_event(on_scroll);
 	
-	rendering::camera cam = rendering::camera{rendering::render_mode::RENDER_3D};
+	rendering::camera cam{rendering::render_mode::RENDER_3D};
 	cam.set_2D_projection_matrix(glm::ortho(0.0f, (float)WINDOW_WIDTH, 0.0f, (float)WINDOW_HEIGHT));
 	cam.set_3D_projection_matrix(glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH/(float)WINDOW_HEIGHT, 0.1f, 100.0f));
 
@@ -111,17 +111,15 @@ int main() {
 		texture_registry.get("example_texture").use();
 
 		cam.set_render_mode(rendering::render_mode::RENDER_3D);
-		// rect.draw(rect_transform);
+		rect.draw(rect_transform);
 
 		shader_registry.get("font_shader").use();
-		cam.update_render_perspective();
 
-		// font_registry.get("example_font").draw_string("Hello World!", 0.75f, vec4<float>{0.78f, 0.59f, 0.24f, 1.0f}, font_transform);
+		font_registry.get("example_font").draw_string("Hello World!", 0.75f, vec4<float>{0.78f, 0.59f, 0.24f, 1.0f}, font_transform);
 
 		cam.set_render_mode(rendering::render_mode::RENDER_2D);
 
 		shader_registry.get("overlay_shader").use();
-		cam.update_render_perspective();
 
 		window.render_widgets();
 
