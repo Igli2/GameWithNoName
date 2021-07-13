@@ -21,6 +21,7 @@ namespace rendering {
             bool empty();
             const GLenum get_type();
             unsigned int release();
+            void bind_to_binding_point(const size_t binding_point);
             ~buffer();
 
             buffer& operator=(const buffer& other) = delete;

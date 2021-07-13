@@ -21,7 +21,7 @@ void buffer::bind() {
 
 void buffer::set(const size_t start, const size_t size, const void* data) {
     this->bind();
-    glBufferSubData(GL_ARRAY_BUFFER, start, size, data);
+    glBufferSubData(this->type, start, size, data);
     glBindBuffer(this->type, 0);
 }
 
@@ -38,6 +38,10 @@ unsigned int buffer::release() {
     this->id = 0;
 
     return ret;
+}
+
+void buffer::bind_to_binding_point(const size_t binding_point) {
+    glBindBufferBase(this->type, binding_point, this->id);
 }
 
 buffer::~buffer() {
@@ -64,6 +68,7 @@ buffer buffer::create(const size_t data_size, const void* data, const GLenum typ
     return b;
 }
 
+//private
 void buffer::delete_data() {
     if(this->id != 0) {
         glDeleteBuffers(1, &this->id);
