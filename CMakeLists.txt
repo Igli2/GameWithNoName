@@ -26,6 +26,7 @@ set(SOURCE_FILES
     src/rendering/texture.cpp
     src/rendering/font.cpp
     src/rendering/camera.cpp
+    src/rendering/model_loader.cpp
     src/events/event_handler.cpp
     src/menu/resource_menu.cpp
     src/menu/button.cpp
@@ -41,6 +42,7 @@ set(SOURCE_FILES
     src/rendering/vec.h
     src/rendering/font.h
     src/rendering/camera.h
+    src/rendering/model_loader.h
     src/events/event_handler.h
     src/events/events.h
     src/menu/resource_menu.h

@@ -16,6 +16,7 @@
 #include "rendering/shader_constants.h"
 #include "rendering/font.h"
 #include "rendering/camera.h"
+#include "rendering/model_loader.h"
 
 #include "utils/registry.h"
 
@@ -88,6 +89,13 @@ int main() {
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 	cam.set_view_matrix(view);
 
+	rendering::mesh obj_3d = rendering::load_mesh_from_file("../res/models/obj/wooden_house.obj");
+
+	glm::mat4 obj_transform = glm::mat4{1.0f};
+	obj_transform = glm::translate(obj_transform, glm::vec3{1.0f, -0.5f, 0.0f});
+	obj_transform = glm::scale(obj_transform, glm::vec3(0.1f, 0.1f, 0.1f));
+	obj_transform = glm::rotate(obj_transform, glm::radians(45.0f), glm::vec3{0.0f, 1.0f, 0.0f}); 
+
 	rendering::mesh rect = rendering::mesh::create_with_texture_and_color(GL_STATIC_DRAW, 2, vertices, indices, tex_coords, vertices_color);
 	rect.set_texture_usage(false);
 
@@ -114,8 +122,12 @@ int main() {
 		rect.draw(rect_transform);
 
 		shader_registry.get("font_shader").use();
-
 		font_registry.get("example_font").draw_string("Hello World!", 0.75f, vec4<float>{0.78f, 0.59f, 0.24f, 1.0f}, font_transform);
+
+		shader_registry.get("model_shader").use();
+		texture_registry.get("example_texture").use();
+		
+		obj_3d.draw(obj_transform);
 
 		cam.set_render_mode(rendering::render_mode::RENDER_2D);
 
@@ -149,6 +161,8 @@ void on_scroll(rendering::render_window* window, double xoffset, double yoffset)
 void register_shaders(utils::registry<rendering::shader_program>& shader_registry) {
 	shader_registry.insert("overlay_shader", std::move(load_shader_program("../res/shaders/vertex_shaders/overlay_shader.vs",
 																   "../res/shaders/fragment_shaders/overlay_shader.fs")));
+	shader_registry.insert("model_shader", std::move(load_shader_program("../res/shaders/vertex_shaders/model_shader.vs",
+																   "../res/shaders/fragment_shaders/model_shader.fs")));
 	shader_registry.insert("font_shader", std::move(load_shader_program("../res/shaders/vertex_shaders/font_shader.vs",
 																   "../res/shaders/fragment_shaders/font_shader.fs")));
 }
