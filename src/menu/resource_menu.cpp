@@ -75,7 +75,7 @@ ResourceMenu::ResourceMenu(const int width, const int height): resource_entries{
     for (int resource_int = Resource::BEECH_LOG; resource_int != Resource::MAX; resource_int++) {
         Resource resource = static_cast<Resource>(resource_int);
 
-        ResourceEntry entry{120, 100 * (float)i + 20, (float)width - 240, 80, resource};
+        ResourceEntry entry{120, height - 100 * (float)i - 100, (float)width - 240, 80, resource};
         this->resource_entries.push_back(std::move(entry));
 
         i += 1;

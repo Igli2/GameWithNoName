@@ -133,7 +133,7 @@ int main() {
 
 		shader_registry.get("overlay_shader").use();
 
-		window.render_widgets();
+		window.render_menus();
 
     	window.update();
 	}
