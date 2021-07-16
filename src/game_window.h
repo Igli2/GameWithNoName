@@ -12,11 +12,13 @@
 #include "rendering/shader.h"
 
 #include "menu/resource_menu.h"
+#include "menu/settings_menu.h"
 #include "menu/button.h"
 
 class game_window : public rendering::render_window {
 	private:
 		ResourceMenu resource_menu;
+		SettingsMenu settings_menu;
 		utils::registry<rendering::shader_program>* shader_registry;
 		utils::registry<rendering::font>* font_registry;
 

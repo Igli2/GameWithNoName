@@ -95,7 +95,10 @@ void render_window::scroll_event(double xoffset, double yoffset) {
 }
 
 void render_window::get_mouse_position(double* x, double* y) {
+    int width, height;
+    glfwGetWindowSize(this->window, &width, &height);
     glfwGetCursorPos(this->window, x, y);
+    *y = height - *y;
 }
 
 void render_window::get_window_size(int* width, int* height) {

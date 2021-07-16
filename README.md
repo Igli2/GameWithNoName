@@ -17,7 +17,6 @@ Controls:
 - minecolonies-like?
 - low-poly
 - cube terrain
-- resource menu, settings menu
 
 ## Example Code
 

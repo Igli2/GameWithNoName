@@ -42,6 +42,7 @@ class ResourceMenu {
 		utils::registry<rendering::font>* font_registry;
 
         void createBackground(const int width, const int height);
+
     public:
         ResourceMenu(const int width, const int height);
         void addResources(Resource resource, unsigned int amount);

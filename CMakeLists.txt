@@ -29,6 +29,7 @@ set(SOURCE_FILES
     src/rendering/model_loader.cpp
     src/events/event_handler.cpp
     src/menu/resource_menu.cpp
+    src/menu/settings_menu.cpp
     src/menu/button.cpp
 
     src/game_window.h
@@ -46,6 +47,7 @@ set(SOURCE_FILES
     src/events/event_handler.h
     src/events/events.h
     src/menu/resource_menu.h
+    src/menu/settings_menu.h
     src/menu/resource.h
     src/menu/button.h
     src/utils/registry.h
