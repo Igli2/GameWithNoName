@@ -104,6 +104,27 @@ mesh mesh::create_with_texture_and_color(const GLenum draw_type, const size_t di
     return m;
 }
 
+mesh mesh::from_assimp_mesh(const aiMesh* assimp_mesh) {
+    std::vector<float> vertices;
+    std::vector<unsigned int> indices;
+
+    vertices.reserve(assimp_mesh->mNumVertices * 3);
+    for(size_t vertex = 0; vertex < assimp_mesh->mNumVertices; vertex++) {
+        vertices.push_back(assimp_mesh->mVertices[vertex].x);
+        vertices.push_back(assimp_mesh->mVertices[vertex].y);
+        vertices.push_back(assimp_mesh->mVertices[vertex].z);
+    }
+
+    indices.reserve(assimp_mesh->mNumFaces * 3);
+    for(size_t face = 0; face < assimp_mesh->mNumFaces; face++) {
+        for(size_t index = 0; index < assimp_mesh->mFaces[face].mNumIndices; index++) {
+            indices.push_back(assimp_mesh->mFaces[face].mIndices[index]);
+        }
+    }
+
+    return mesh::create(GL_STATIC_DRAW, 3, vertices, indices);
+}
+
 //private
 void mesh::set_texture_coords(const GLenum draw_type, const std::vector<float>& texture_coords) {
     this->buffers.push_back(buffer::create(texture_coords.size() * sizeof(float), &texture_coords[0], GL_ARRAY_BUFFER, draw_type));

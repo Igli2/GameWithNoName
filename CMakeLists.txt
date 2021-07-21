@@ -61,6 +61,4 @@ include_directories(${FREETYPE_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS} includes/ js
 
 add_executable(game src/game.cpp ${SOURCE_FILES})
 
-target_link_libraries(game glad ${OPENGL_LIBRARIES} glfw)
-target_link_libraries(game ${FREETYPE_LIBRARIES})
-target_link_libraries(game json_lib)
+target_link_libraries(game glad ${OPENGL_LIBRARIES} glfw json_lib ${FREETYPE_LIBRARIES} assimp)

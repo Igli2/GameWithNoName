@@ -17,6 +17,7 @@
 #include "rendering/font.h"
 #include "rendering/camera.h"
 #include "rendering/model_loader.h"
+#include "rendering/model.h"
 
 #include "utils/registry.h"
 
@@ -89,7 +90,8 @@ int main() {
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 	cam.set_view_matrix(view);
 
-	rendering::mesh obj_3d = rendering::load_mesh_from_file("../res/models/obj/wooden_house.obj");
+	//rendering::mesh obj_3d = rendering::load_mesh_from_file("../res/models/obj/wooden_house.obj");
+	rendering::model obj_3d = rendering::model::load_from_file("../res/models/obj/wooden_house.obj");
 
 	glm::mat4 obj_transform = glm::mat4{1.0f};
 	obj_transform = glm::translate(obj_transform, glm::vec3{1.0f, -0.5f, 0.0f});
@@ -110,7 +112,8 @@ int main() {
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
