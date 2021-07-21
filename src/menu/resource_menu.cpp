@@ -70,7 +70,7 @@ void ResourceEntry::render(utils::registry<rendering::shader_program>* shader_re
 
 
 
-ResourceMenu::ResourceMenu(const int width, const int height): resource_entries{}, scroll{0}, visible{false} {
+ResourceMenu::ResourceMenu(const int width, const int height, std::map<std::string, int>* settings): resource_entries{}, scroll{0}, visible{false}, settings{settings} {
     unsigned int i = 0;
     for (int resource_int = Resource::BEECH_LOG; resource_int != Resource::MAX; resource_int++) {
         Resource resource = static_cast<Resource>(resource_int);
@@ -185,5 +185,5 @@ void ResourceMenu::set_font_registry(utils::registry<rendering::font>* font_regi
 }
 
 void ResourceMenu::on_scroll(double offset) {
-    this->scroll += offset * ResourceMenu::SCROLL_SPEED;
+    this->scroll += offset * this->settings->at("scroll_speed");
 }

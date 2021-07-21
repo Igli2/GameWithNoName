@@ -3,7 +3,7 @@
 #include "game_window.h"
 
 game_window::game_window(const std::string& title, const size_t width, const size_t height, const bool resizable, event::event_handler& ev_handler)
-    : render_window{title, width, height, resizable, ev_handler}, resource_menu{(int)width, (int)height}, settings_menu{(int)width, (int)height} {
+    : render_window{title, width, height, resizable, ev_handler}, settings_menu{(int)width, (int)height}, resource_menu{(int)width, (int)height, settings_menu.get_settings()} {
     // resource menu test
     this->resource_menu.addResources(Resource::BEECH_LOG, 10);
     this->resource_menu.removeResources(Resource::BEECH_LOG, 2);

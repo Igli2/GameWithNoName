@@ -31,7 +31,6 @@ class ResourceEntry {
 class ResourceMenu {
     private:
         const float MARGIN_LEFT_RIGHT = 100;
-        const float SCROLL_SPEED = 10;
 
         bool visible;
         int scroll;
@@ -40,11 +39,12 @@ class ResourceMenu {
         rendering::mesh entry_background;
 		utils::registry<rendering::shader_program>* shader_registry;
 		utils::registry<rendering::font>* font_registry;
+        std::map<std::string, int>* settings;
 
         void createBackground(const int width, const int height);
 
     public:
-        ResourceMenu(const int width, const int height);
+        ResourceMenu(const int width, const int height, std::map<std::string, int>* settings);
         void addResources(Resource resource, unsigned int amount);
         // remove resources, returns false if you don't have enough, returns true on success
         bool removeResources(Resource resource, unsigned int amount);

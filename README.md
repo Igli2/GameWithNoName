@@ -9,6 +9,7 @@ We also try to make this game as realistic as possible (in terms of game mechani
 
 Controls:
 - **R** to open resource menu
+- **S** to open settings menu
 
 ## Ideas / TODO's
 
