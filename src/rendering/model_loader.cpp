@@ -110,7 +110,7 @@ mesh rendering::load_mesh_from_stream(std::istream& stream) {
                 parse_float_array(components, texture_coordinates_in, 1, 2); 
             } else if(components[0] == "f") {
                 if(components.size() != 4 || !parse_face(components, vertices, texture_coordinates_in, indices, texture_coordinates))
-                    throw std::runtime_error("Invalid face coordinate '" + line  + "'(only triangular faces are supported)!");
+                    throw std::runtime_error("Invalid face '" + line  + "'(only triangular faces are supported)!");
             }
         }
 

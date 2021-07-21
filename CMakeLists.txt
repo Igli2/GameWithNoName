@@ -4,10 +4,7 @@ set (CMAKE_CXX_STANDARD 14)
 project(GameWithNoName)
 
 find_package(Freetype REQUIRED)
-include_directories(${FREETYPE_INCLUDE_DIRS})
-
 find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIRS})
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "GLFW lib only")
 set(GLFW_INSTALL OFF CACHE BOOL "GLFW lib only")
@@ -15,6 +12,7 @@ set(GLFW_INSTALL OFF CACHE BOOL "GLFW lib only")
 add_subdirectory(glad)
 add_subdirectory(glfw)
 add_subdirectory(json_library)
+add_subdirectory(assimp)
 
 set(SOURCE_FILES
     src/game_window.cpp
@@ -27,6 +25,7 @@ set(SOURCE_FILES
     src/rendering/font.cpp
     src/rendering/camera.cpp
     src/rendering/model_loader.cpp
+    src/rendering/model.cpp
     src/events/event_handler.cpp
     src/menu/resource_menu.cpp
     src/menu/settings_menu.cpp
@@ -44,6 +43,7 @@ set(SOURCE_FILES
     src/rendering/font.h
     src/rendering/camera.h
     src/rendering/model_loader.h
+    src/rendering/model.h
     src/events/event_handler.h
     src/events/events.h
     src/menu/resource_menu.h
@@ -57,9 +57,7 @@ set(SOURCE_FILES
     ${JSON_LIBRARY_FILES}
 )
 
-include_directories(includes/)
-include_directories(json_library/src/lib/)
-include_directories(glm/)
+include_directories(${FREETYPE_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS} includes/ json_library/src/lib/ glm/ assimp/include/ build/assimp/include/)
 
 add_executable(game src/game.cpp ${SOURCE_FILES})
 
