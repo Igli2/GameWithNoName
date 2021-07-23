@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <cstddef>
+#include <array>
 
 #include "buffer.h"
 #include "vao.h"
@@ -54,6 +55,6 @@ namespace rendering {
                                const std::vector<unsigned int>& indices, const std::vector<float>& color);
             static mesh create_with_texture_and_color(const GLenum draw_type, const size_t dimensions, const std::vector<float>& vertices,
                                const std::vector<unsigned int>& indices, const std::vector<float>& texture_coords, const std::vector<float>& color);
-            static mesh from_assimp_mesh(const aiMesh* assimp_mesh);
+            static mesh from_assimp_mesh(const aiMesh* assimp_mesh, const std::vector<std::array<float, 4>>& color_palette);
     };   
 }

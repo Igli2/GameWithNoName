@@ -8,6 +8,7 @@
 
 #include <string>
 #include <vector>
+#include <array>
 
 #include "mesh.h"
 
@@ -16,7 +17,9 @@ namespace rendering {
         private:
             std::vector<mesh> model_meshes;
 
-            void add_meshes_from_node(const aiNode* assimp_node, const aiScene* assimp_model);
+            void add_meshes_from_node(const aiNode* assimp_node, const aiScene* assimp_model, const std::vector<std::array<float, 4>>& color_palette);
+            
+            static std::vector<std::array<float, 4>> get_color_palette(const aiScene* assimp_model);
         public:
             model();
             model(model&& other);

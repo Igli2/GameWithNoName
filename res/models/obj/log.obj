@@ -1,6 +1,6 @@
 # Blender v2.93.1 OBJ File: 'log.blend'
 # www.blender.org
-mtllib log.mtl
+mtllib ../materials/log.mtl
 o Cylinder
 v -2.910294 1.006121 -0.032577
 v 2.357637 1.004127 -0.032577

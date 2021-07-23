@@ -1,6 +1,6 @@
 # Blender v2.93.1 OBJ File: 'birch_tree.blend'
 # www.blender.org
-mtllib birch_tree.mtl
+mtllib ../materials/birch_tree.mtl
 o trunk_Cylinder
 v -0.001267 0.000000 -0.471246
 v -0.001267 3.390399 -0.489276

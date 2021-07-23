@@ -104,9 +104,16 @@ mesh mesh::create_with_texture_and_color(const GLenum draw_type, const size_t di
     return m;
 }
 
-mesh mesh::from_assimp_mesh(const aiMesh* assimp_mesh) {
+mesh mesh::from_assimp_mesh(const aiMesh* assimp_mesh, const std::vector<std::array<float, 4>>& color_palette) {
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
+    std::vector<float> color;
+
+    color.reserve(assimp_mesh->mNumVertices * 4);
+    const std::array<float, 4>& mesh_color = color_palette[assimp_mesh->mMaterialIndex];
+    for(size_t vertex = 0; vertex < assimp_mesh->mNumVertices; vertex++) {
+        color.insert(color.end(), mesh_color.begin(), mesh_color.end());
+    }
 
     vertices.reserve(assimp_mesh->mNumVertices * 3);
     for(size_t vertex = 0; vertex < assimp_mesh->mNumVertices; vertex++) {
@@ -122,7 +129,7 @@ mesh mesh::from_assimp_mesh(const aiMesh* assimp_mesh) {
         }
     }
 
-    return mesh::create(GL_STATIC_DRAW, 3, vertices, indices);
+    return mesh::create_with_color(GL_STATIC_DRAW, 3, vertices, indices, color);
 }
 
 //private

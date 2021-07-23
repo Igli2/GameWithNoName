@@ -1,6 +1,6 @@
 # Blender v2.93.1 OBJ File: 'player.blend'
 # www.blender.org
-mtllib player.mtl
+mtllib ../materials/player.mtl
 o Icosphere_Icosphere.001
 v 1.423398 0.004017 0.552827
 v -0.098168 0.004017 0.876688
