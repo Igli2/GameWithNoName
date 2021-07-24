@@ -86,8 +86,9 @@ int main() {
 	cam.set_2D_projection_matrix(glm::ortho(0.0f, (float)WINDOW_WIDTH, 0.0f, (float)WINDOW_HEIGHT));
 	cam.set_3D_projection_matrix(glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH/(float)WINDOW_HEIGHT, 0.1f, 100.0f));
 
+
 	glm::mat4 view{1.0f};
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	view = glm::lookAt(glm::vec3{4.0f, 1.5f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
 	cam.set_view_matrix(view);
 
 	//rendering::mesh obj_3d = rendering::load_mesh_from_file("../res/models/obj/wooden_house.obj");
@@ -139,6 +140,9 @@ int main() {
 		window.render_menus();
 
     	window.update();
+
+		view = glm::rotate(view, 0.01f, glm::vec3{0.0f, 1.0f, 0.0f});
+		cam.set_view_matrix(view);
 	}
 
 	glfwTerminate();
