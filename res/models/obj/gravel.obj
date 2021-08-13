@@ -1,6 +1,6 @@
 # Blender v2.93.1 OBJ File: 'gravel.blend'
 # www.blender.org
-mtllib gravel.mtl
+mtllib ../materials/gravel.mtl
 o Icosphere
 v 0.675369 -0.000056 -0.256181
 v 0.905867 0.076301 0.006900

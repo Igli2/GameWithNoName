@@ -1,6 +1,6 @@
 # Blender v2.93.1 OBJ File: 'rock.blend'
 # www.blender.org
-mtllib rock.mtl
+mtllib ../materials/rock.mtl
 o Cube_Cube.001
 v -0.592391 0.227453 0.596367
 v -0.538373 0.497052 0.556903

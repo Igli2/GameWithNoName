@@ -17,6 +17,7 @@
 #include "rendering/font.h"
 #include "rendering/camera.h"
 #include "rendering/model_loader.h"
+#include "rendering/model.h"
 
 #include "utils/registry.h"
 
@@ -85,15 +86,17 @@ int main() {
 	cam.set_2D_projection_matrix(glm::ortho(0.0f, (float)WINDOW_WIDTH, 0.0f, (float)WINDOW_HEIGHT));
 	cam.set_3D_projection_matrix(glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH/(float)WINDOW_HEIGHT, 0.1f, 100.0f));
 
+
 	glm::mat4 view{1.0f};
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	view = glm::lookAt(glm::vec3{4.0f, 1.5f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
 	cam.set_view_matrix(view);
 
-	rendering::mesh obj_3d = rendering::load_mesh_from_file("../res/models/obj/wooden_house.obj");
+	//rendering::mesh obj_3d = rendering::load_mesh_from_file("../res/models/obj/wooden_house.obj");
+	rendering::model obj_3d = rendering::model::load_from_file("../res/models/obj/birch_tree.obj");
 
 	glm::mat4 obj_transform = glm::mat4{1.0f};
 	obj_transform = glm::translate(obj_transform, glm::vec3{1.0f, -0.5f, 0.0f});
-	obj_transform = glm::scale(obj_transform, glm::vec3(0.1f, 0.1f, 0.1f));
+	obj_transform = glm::scale(obj_transform, glm::vec3(0.15f, 0.15f, 0.15f));
 	obj_transform = glm::rotate(obj_transform, glm::radians(45.0f), glm::vec3{0.0f, 1.0f, 0.0f}); 
 
 	rendering::mesh rect = rendering::mesh::create_with_texture_and_color(GL_STATIC_DRAW, 2, vertices, indices, tex_coords, vertices_color);
@@ -111,6 +114,7 @@ int main() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	//glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	while(window.is_open()) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -136,6 +140,9 @@ int main() {
 		window.render_menus();
 
     	window.update();
+
+		view = glm::rotate(view, 0.01f, glm::vec3{0.0f, 1.0f, 0.0f});
+		cam.set_view_matrix(view);
 	}
 
 	glfwTerminate();

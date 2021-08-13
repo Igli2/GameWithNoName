@@ -1,6 +1,6 @@
 # Blender v2.93.1 OBJ File: ''
 # www.blender.org
-mtllib test_cube.mtl
+mtllib ../materials/test_cube.mtl
 o Cube
 v 1.000000 1.000000 -1.000000
 v 1.000000 -1.000000 -1.000000

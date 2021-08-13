@@ -1,6 +1,6 @@
 # Blender v2.93.1 OBJ File: 'wooden_house.blend'
 # www.blender.org
-mtllib wooden_house.mtl
+mtllib ../materials/wooden_house.mtl
 o backwall_Cylinder.031
 v -3.404764 3.933484 -5.000000
 v -3.404764 3.933484 5.000000
