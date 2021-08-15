@@ -2,6 +2,7 @@
 
 #include <map>
 
+#include "empty_menu.h"
 #include "resource.h"
 
 #include "../rendering/mesh.h"
@@ -28,17 +29,12 @@ class ResourceEntry {
         void render(utils::registry<rendering::shader_program>* shader_registry, utils::registry<rendering::font>* font_registry, int scroll_offset);
 };
 
-class ResourceMenu {
+class ResourceMenu : public EmptyMenu {
     private:
-        const float MARGIN_LEFT_RIGHT = 100;
-
-        bool visible;
         int scroll;
         std::vector<ResourceEntry> resource_entries;
         rendering::mesh background;
         rendering::mesh entry_background;
-		utils::registry<rendering::shader_program>* shader_registry;
-		utils::registry<rendering::font>* font_registry;
         std::map<std::string, int>* settings;
 
         void createBackground(const int width, const int height);
@@ -49,10 +45,6 @@ class ResourceMenu {
         // remove resources, returns false if you don't have enough, returns true on success
         bool removeResources(Resource resource, unsigned int amount);
         bool hasResource(Resource resource, unsigned int amount);
-        void setVisible(bool state);
-        bool isVisible();
-		void set_shader_registry(utils::registry<rendering::shader_program>* shader_registry);
-		void set_font_registry(utils::registry<rendering::font>* font_registry);
-        void render();
+        void render() override;
         void on_scroll(double offset);
 };

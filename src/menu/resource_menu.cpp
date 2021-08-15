@@ -70,7 +70,7 @@ void ResourceEntry::render(utils::registry<rendering::shader_program>* shader_re
 
 
 
-ResourceMenu::ResourceMenu(const int width, const int height, std::map<std::string, int>* settings): resource_entries{}, scroll{0}, visible{false}, settings{settings} {
+ResourceMenu::ResourceMenu(const int width, const int height, std::map<std::string, int>* settings): EmptyMenu{}, resource_entries{}, scroll{0}, settings{settings} {
     unsigned int i = 0;
     for (int resource_int = Resource::BEECH_LOG; resource_int != Resource::MAX; resource_int++) {
         Resource resource = static_cast<Resource>(resource_int);
@@ -153,35 +153,19 @@ void ResourceMenu::createBackground(const int width, const int height) {
 }
 
 void ResourceMenu::render() {
-    if (this->visible) {
+    if (this->isVisible()) {
         this->background.draw();
 
         for (ResourceEntry& r_entry : this->resource_entries) {
-            shader_registry->get("overlay_shader").use();
+            this->get_shader_registry()->get("overlay_shader").use();
 
             glm::mat4 offset{1.0f};
             offset = glm::translate(offset, glm::vec3{r_entry.x, r_entry.y - this->scroll, 0.0f});
             this->entry_background.draw(offset);
 
-            r_entry.render(this->shader_registry, this->font_registry, this->scroll);
+            r_entry.render(this->get_shader_registry(), this->get_font_registry(), this->scroll);
         }
     }
-}
-
-void ResourceMenu::setVisible(bool state) {
-    this->visible = state;
-}
-
-bool ResourceMenu::isVisible() {
-    return this->visible;
-}
-
-void ResourceMenu::set_shader_registry(utils::registry<rendering::shader_program>* shader_registry) {
-    this->shader_registry = shader_registry;
-}
-
-void ResourceMenu::set_font_registry(utils::registry<rendering::font>* font_registry) {
-    this->font_registry = font_registry;
 }
 
 void ResourceMenu::on_scroll(double offset) {

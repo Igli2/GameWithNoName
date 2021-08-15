@@ -18,8 +18,7 @@ SettingButton::SettingButton(float x, float y, float width, float height, std::s
 
 
 
-SettingsMenu::SettingsMenu(const int width, const int height): 
-    visible{false} {
+SettingsMenu::SettingsMenu(const int width, const int height): EmptyMenu{} {
         this->settings = {{"scroll_speed", 5}};
 
         SettingButton test_button{SettingsMenu::MARGIN_LEFT_RIGHT + 20, (float)height - 80, 160, 60, "scroll_speed", {5, 10, 15, 20}, &this->settings};
@@ -51,27 +50,11 @@ SettingsMenu::SettingsMenu(const int width, const int height):
         this->background = std::move(rendering::mesh::create_with_color(GL_STATIC_DRAW, 2, vertices, indices, color));
 }
 
-void SettingsMenu::setVisible(bool state) {
-    this->visible = state;
-}
-
-bool SettingsMenu::isVisible() {
-    return this->visible;
-}
-
-void SettingsMenu::set_shader_registry(utils::registry<rendering::shader_program>* shader_registry) {
-    this->shader_registry = shader_registry;
-}
-
-void SettingsMenu::set_font_registry(utils::registry<rendering::font>* font_registry) {
-    this->font_registry = font_registry;
-}
-
 void SettingsMenu::render() {
-    if (this->visible) {
+    if (this->isVisible()) {
         this->background.draw();
         for (SettingButton& button : this->setting_buttons) {
-            button.render(this->shader_registry, this->font_registry);
+            button.render(this->get_shader_registry(), this->get_font_registry());
         }
     }
 }

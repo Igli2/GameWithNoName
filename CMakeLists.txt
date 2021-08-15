@@ -30,6 +30,7 @@ set(SOURCE_FILES
     src/menu/resource_menu.cpp
     src/menu/settings_menu.cpp
     src/menu/button.cpp
+    src/menu/empty_menu.cpp
 
     src/game_window.h
     src/rendering/render_window.h
@@ -50,6 +51,7 @@ set(SOURCE_FILES
     src/menu/settings_menu.h
     src/menu/resource.h
     src/menu/button.h
+    src/menu/empty_menu.h
     src/utils/registry.h
 
     src/utils/registry.ipp

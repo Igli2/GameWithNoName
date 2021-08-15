@@ -8,6 +8,7 @@
 #include "../rendering/shader.h"
 #include "../rendering/font.h"
 
+#include "empty_menu.h"
 #include "button.h"
 
 class SettingButton : public Button {
@@ -22,11 +23,8 @@ class SettingButton : public Button {
         void callback();
 };
 
-class SettingsMenu {
+class SettingsMenu : public EmptyMenu {
     private:
-        const float MARGIN_LEFT_RIGHT = 100;
-
-        bool visible;
         rendering::mesh background;
 		utils::registry<rendering::shader_program>* shader_registry;
 		utils::registry<rendering::font>* font_registry;
@@ -35,11 +33,7 @@ class SettingsMenu {
 
     public:
         SettingsMenu(const int width, const int height);
-        void setVisible(bool state);
-        bool isVisible();
-		void set_shader_registry(utils::registry<rendering::shader_program>* shader_registry);
-		void set_font_registry(utils::registry<rendering::font>* font_registry);
-        void render();
+        void render() override;
         void on_mouse_press(const double& x, const double& y);
         void on_mouse_release(const double& x, const double& y);
         std::map<std::string, int>* get_settings();
